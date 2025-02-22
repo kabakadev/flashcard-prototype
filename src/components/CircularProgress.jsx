@@ -2,68 +2,77 @@
 
 import { motion } from "framer-motion"
 import PropTypes from "prop-types"
-import { useTheme } from "./ThemeProvider"
+import { Box, CircularProgress as MUICircularProgress, Typography } from "@mui/material"
 
-export function CircularProgress({ percentage, label, color, darkColor }) {
-  const { theme } = useTheme()
-  const radius = 40
-  const circumference = 2 * Math.PI * radius
-  const strokeDashoffset = circumference - (percentage / 100) * circumference
-
+export function CircularProgress({ percentage, label, size = 100 }) {
   return (
-    <div className="flex flex-col items-center">
-      <div className="relative">
-        <svg width="100" height="100" className="transform -rotate-90">
-          {/* Background circle */}
-          <circle
-            cx="50"
-            cy="50"
-            r={radius}
-            stroke={theme === "dark" ? "#374151" : "#e2e8f0"}
-            strokeWidth="8"
-            fill="none"
-          />
-          {/* Progress circle */}
-          <motion.circle
-            cx="50"
-            cy="50"
-            r={radius}
-            stroke={theme === "dark" ? darkColor : color}
-            strokeWidth="8"
-            fill="none"
-            strokeDasharray={circumference}
-            initial={{ strokeDashoffset: circumference }}
-            animate={{ strokeDashoffset }}
-            transition={{ duration: 1, ease: "easeInOut" }}
-          />
-        </svg>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <motion.span
-            className="text-xl font-bold text-gray-800 dark:text-white"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-          >
-            {percentage}%
-          </motion.span>
-        </div>
-      </div>
-      <motion.span
-        className="mt-2 text-sm text-gray-600 dark:text-gray-300"
-        initial={{ opacity: 0, y: 5 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.7 }}
-      >
-        {label}
-      </motion.span>
-    </div>
+    <Box sx={{ position: "relative", display: "inline-flex", flexDirection: "column", alignItems: "center" }}>
+      <Box sx={{ position: "relative", display: "inline-flex" }}>
+        {/* Background circle */}
+        <MUICircularProgress
+          variant="determinate"
+          value={100}
+          size={size}
+          thickness={2}
+          sx={{
+            color: (theme) => (theme.palette.mode === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"),
+          }}
+        />
+        {/* Progress circle */}
+        <MUICircularProgress
+          variant="determinate"
+          value={percentage}
+          size={size}
+          thickness={2}
+          sx={{
+            position: "absolute",
+            left: 0,
+            color: (theme) => (theme.palette.mode === "dark" ? "#3b82f6" : "#ffd4f7"),
+            circle: {
+              strokeLinecap: "round",
+            },
+          }}
+        />
+        {/* Percentage text */}
+        <Box
+          sx={{
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+            position: "absolute",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+            <Typography variant="h6" component="div" sx={{ color: (theme) => theme.palette.text.primary }}>
+              {percentage}%
+            </Typography>
+          </motion.div>
+        </Box>
+      </Box>
+      {/* Label */}
+      <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }}>
+        <Typography
+          variant="body2"
+          sx={{
+            mt: 1,
+            color: (theme) => theme.palette.text.secondary,
+            textAlign: "center",
+          }}
+        >
+          {label}
+        </Typography>
+      </motion.div>
+    </Box>
   )
 }
 
 CircularProgress.propTypes = {
   percentage: PropTypes.number.isRequired,
   label: PropTypes.string.isRequired,
-  color: PropTypes.string.isRequired,
-  darkColor: PropTypes.string.isRequired,
+  size: PropTypes.number,
 }
 

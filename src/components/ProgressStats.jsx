@@ -1,73 +1,85 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { CircularProgress } from "./CircularProgress"
 import { Brain, Trophy, Clock, Target } from "lucide-react"
+import { Card, CardContent, Typography } from "@mui/material"
+import { CircularProgress } from "./CircularProgress"
+
+const stats = [
+  {
+    icon: Brain,
+    value: 85,
+    label: "Retention Rate",
+    description: "Average memory retention",
+  },
+  {
+    icon: Trophy,
+    value: 120,
+    label: "Cards Mastered",
+    description: "Successfully learned",
+  },
+  {
+    icon: Clock,
+    value: 15,
+    label: "Minutes/Day",
+    description: "Average study time",
+  },
+  {
+    icon: Target,
+    value: 92,
+    label: "Accuracy",
+    description: "Correct answers",
+  },
+]
 
 export default function ProgressStats() {
-  const stats = [
-    {
-      icon: Brain,
-      value: 85,
-      label: "Retention Rate",
-      description: "Average memory retention",
-    },
-    {
-      icon: Trophy,
-      value: 120,
-      label: "Cards Mastered",
-      description: "Successfully learned",
-    },
-    {
-      icon: Clock,
-      value: 15,
-      label: "Minutes/Day",
-      description: "Average study time",
-    },
-    {
-      icon: Target,
-      value: 92,
-      label: "Accuracy",
-      description: "Correct answers",
-    },
-  ]
-
   return (
     <div className="max-w-6xl mx-auto px-4">
-      {/* Centered Title and Description */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="text-center mb-12"
       >
-        <h3 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">
+        <Typography variant="h4" sx={{ color: "text.primary", mb: 2 }}>
           Understand Any Topic, One Flashcard at a Time
-        </h3>
-        <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+        </Typography>
+        <Typography variant="body1" sx={{ color: "text.secondary", maxWidth: "2xl", mx: "auto" }}>
           Create and study your own flashcards with an intuitive, distraction-free experience. Track your progress and
           retain knowledge more effectively.
-        </p>
+        </Typography>
       </motion.div>
 
-      {/* Stats Container */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Circular Progress Section */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-          className="bg-[#98f5e1] dark:bg-gray-800 rounded-lg p-8 h-[400px] transition-colors duration-300"
-        >
-          <div className="grid grid-cols-2 gap-6 h-full items-center">
-            <CircularProgress percentage={85} label="Weekly Goal" color="#f1c0e8" darkColor="#3b82f6" />
-            <CircularProgress percentage={92} label="Mastery Level" color="#f1c0e8" darkColor="#3b82f6" />
-            <CircularProgress percentage={78} label="Study Streak" color="#f1c0e8" darkColor="#3b82f6" />
-            <CircularProgress percentage={95} label="Focus Score" color="#f1c0e8" darkColor="#3b82f6" />
-          </div>
+        <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
+          <Card
+            sx={{
+              height: "400px",
+              bgcolor: "background.paper",
+              transition: "all 0.3s ease",
+              "&:hover": {
+                boxShadow: (theme) =>
+                  theme.palette.mode === "dark"
+                    ? "0 0 0 1px rgba(59, 130, 246, 0.5)"
+                    : "0 0 0 1px rgba(152, 245, 225, 0.5)",
+              },
+            }}
+          >
+            <CardContent sx={{ p: 4 }}>
+              <div className="grid grid-cols-2 gap-6 h-full items-center">
+                {[
+                  { value: 85, label: "Weekly Goal" },
+                  { value: 92, label: "Mastery Level" },
+                  { value: 78, label: "Study Streak" },
+                  { value: 95, label: "Focus Score" },
+                ].map((item, i) => (
+                  <CircularProgress key={i} percentage={item.value} label={item.label} size={100} />
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </motion.div>
 
-        {/* Stats Cards Section */}
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -80,21 +92,62 @@ export default function ProgressStats() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-[#98f5e1] dark:bg-gray-800 rounded-lg p-6 flex flex-col justify-center transition-colors duration-300"
             >
-              <stat.icon className="w-6 h-6 mb-3 text-gray-800 dark:text-gray-100" />
-              <motion.div
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
+              <Card
+                sx={{
+                  height: "100%",
+                  bgcolor: "background.paper",
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    boxShadow: (theme) =>
+                      theme.palette.mode === "dark"
+                        ? "0 0 0 1px rgba(59, 130, 246, 0.5)"
+                        : "0 0 0 1px rgba(152, 245, 225, 0.5)",
+                  },
+                }}
               >
-                <div className="text-2xl font-bold text-gray-800 dark:text-white mb-1">
-                  {stat.value}
-                  {stat.label.includes("Rate") || stat.label.includes("Accuracy") ? "%" : ""}
-                </div>
-                <div className="text-sm font-medium text-gray-800 dark:text-gray-100 mb-1">{stat.label}</div>
-                <div className="text-xs text-gray-600 dark:text-gray-300">{stat.description}</div>
-              </motion.div>
+                <CardContent
+                  sx={{ p: 4, height: "100%", display: "flex", flexDirection: "column", justifyContent: "center" }}
+                >
+                  <div
+                    style={{
+                      backgroundColor: "#3b82f6",
+                      padding: "10px",
+                      borderRadius: "50%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "40px",
+                      height: "40px",
+                      marginBottom: "16px",
+                    }}
+                  >
+                    <stat.icon
+                      className="w-5 h-5"
+                      style={{
+                        color: "#ffffff",
+                        strokeWidth: 2.5,
+                      }}
+                    />
+                  </div>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
+                  >
+                    <Typography variant="h4" sx={{ color: "text.primary", mb: 1 }}>
+                      {stat.value}
+                      {stat.label.includes("Rate") || stat.label.includes("Accuracy") ? "%" : ""}
+                    </Typography>
+                    <Typography variant="subtitle1" sx={{ color: "text.primary", mb: 0.5 }}>
+                      {stat.label}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                      {stat.description}
+                    </Typography>
+                  </motion.div>
+                </CardContent>
+              </Card>
             </motion.div>
           ))}
         </motion.div>

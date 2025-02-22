@@ -1,38 +1,59 @@
 "use client"
 
-import { createContext, useContext, useEffect, useState } from "react"
-import PropTypes from "prop-types"
+import { createContext, useContext, useState, useEffect } from "react"
+import { ThemeProvider as MUIThemeProvider } from "@mui/material/styles"
+import CssBaseline from "@mui/material/CssBaseline"
+import { theme as lightTheme, darkTheme } from "../theme"
 
-const ThemeContext = createContext()
+const ThemeContext = createContext({
+  theme: "light",
+  setTheme: () => null,
+})
 
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("theme") || "light"
-    }
-    return "light"
-  })
+  const [theme, setTheme] = useState("light")
 
   useEffect(() => {
-    const root = document.documentElement
-    if (theme === "dark") {
-      root.classList.add("dark")
-    } else {
-      root.classList.remove("dark")
+    // Safely get theme from localStorage
+    const savedTheme = typeof window !== "undefined" ? localStorage.getItem("theme") : "light"
+
+    if (savedTheme) {
+      setTheme(savedTheme)
     }
-    localStorage.setItem("theme", theme)
+  }, [])
+
+  useEffect(() => {
+    // Update document class and localStorage
+    if (typeof window !== "undefined") {
+      const root = window.document.documentElement
+      root.classList.remove("light", "dark")
+      root.classList.add(theme)
+      localStorage.setItem("theme", theme)
+    }
   }, [theme])
 
-  const toggleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light")
+  const value = {
+    theme,
+    setTheme: (newTheme) => {
+      setTheme(newTheme)
+    },
   }
 
-  return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>
+  return (
+    <ThemeContext.Provider value={value}>
+      <MUIThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
+        <CssBaseline />
+        {children}
+      </MUIThemeProvider>
+    </ThemeContext.Provider>
+  )
 }
 
-ThemeProvider.propTypes = {
-  children: PropTypes.node.isRequired,
+export const useTheme = () => {
+  const context = useContext(ThemeContext)
+  if (context === undefined) {
+    throw new Error("useTheme must be used within a ThemeProvider")
+  }
+  return context
 }
-
-export const useTheme = () => useContext(ThemeContext)
 

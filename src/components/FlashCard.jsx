@@ -3,8 +3,9 @@
 import { useState } from "react"
 import { motion } from "framer-motion"
 import PropTypes from "prop-types"
+import { Card, CardContent, Button, Typography } from "@mui/material"
 
-function FlashCard({ question, answer }) {
+export default function FlashCard({ question, answer }) {
   const [isFlipped, setIsFlipped] = useState(false)
 
   return (
@@ -16,54 +17,143 @@ function FlashCard({ question, answer }) {
         whileHover={{ scale: 1.02 }}
       >
         {/* Front of card */}
-        <div className="absolute w-full h-full backface-hidden">
-          <div className="w-full h-full bg-[#98f5e1] dark:bg-gray-800 rounded-[20px] p-8 flex flex-col justify-between transition-colors duration-300">
+        <Card
+          sx={{
+            position: "absolute",
+            width: "100%",
+            height: "100%",
+            backfaceVisibility: "hidden",
+            bgcolor: (theme) =>
+              theme.palette.mode === "dark" ? theme.palette.background.paper : theme.palette.background.paper,
+            color: (theme) => theme.palette.text.primary,
+            transition: (theme) =>
+              theme.transitions.create(["background-color", "color"], {
+                duration: theme.transitions.duration.standard,
+              }),
+          }}
+        >
+          <CardContent
+            sx={{
+              height: "100%",
+              p: 3,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}
+          >
             <div>
-              <h4 className="font-medium mb-4 text-gray-800 dark:text-gray-100">Question:</h4>
-              <p className="text-gray-800 dark:text-gray-200 min-h-[100px]">{question}</p>
+              <Typography variant="h6" sx={{ mb: 2 }}>
+                Question:
+              </Typography>
+              <Typography variant="body1" sx={{ minHeight: "100px" }}>
+                {question}
+              </Typography>
             </div>
             <div className="flex gap-[19px]">
-              <button
+              <Button
+                variant="contained"
+                fullWidth
                 onClick={() => setIsFlipped(true)}
-                className="flex-1 py-2 rounded-[30px] bg-[#ffd4f7] dark:bg-blue-500 
-                  text-gray-800 dark:text-white hover:opacity-90 transition-all duration-300"
+                sx={{
+                  bgcolor: (theme) =>
+                    theme.palette.mode === "dark" ? theme.palette.primary.main : theme.palette.primary.main,
+                  color: (theme) => theme.palette.primary.contrastText,
+                  "&:hover": {
+                    bgcolor: (theme) =>
+                      theme.palette.mode === "dark" ? theme.palette.primary.dark : theme.palette.primary.light,
+                  },
+                }}
               >
                 Flip
-              </button>
-              <button
-                className="flex-1 py-2 rounded-[30px] bg-[#ffd4f7] dark:bg-blue-500 
-                  text-gray-800 dark:text-white hover:opacity-90 transition-all duration-300"
+              </Button>
+              <Button
+                variant="contained"
+                fullWidth
+                sx={{
+                  bgcolor: (theme) =>
+                    theme.palette.mode === "dark" ? theme.palette.primary.main : theme.palette.primary.main,
+                  color: (theme) => theme.palette.primary.contrastText,
+                  "&:hover": {
+                    bgcolor: (theme) =>
+                      theme.palette.mode === "dark" ? theme.palette.primary.dark : theme.palette.primary.light,
+                  },
+                }}
               >
                 Next
-              </button>
+              </Button>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
         {/* Back of card */}
-        <div className="absolute w-full h-full backface-hidden [transform:rotateY(180deg)]">
-          <div className="w-full h-full bg-[#98f5e1] dark:bg-gray-800 rounded-[20px] p-6 flex flex-col justify-between transition-colors duration-300">
+        <Card
+          sx={{
+            position: "absolute",
+            width: "100%",
+            height: "100%",
+            backfaceVisibility: "hidden",
+            transform: "rotateY(180deg)",
+            bgcolor: (theme) =>
+              theme.palette.mode === "dark" ? theme.palette.background.paper : theme.palette.background.paper,
+            color: (theme) => theme.palette.text.primary,
+            transition: (theme) =>
+              theme.transitions.create(["background-color", "color"], {
+                duration: theme.transitions.duration.standard,
+              }),
+          }}
+        >
+          <CardContent
+            sx={{
+              height: "100%",
+              p: 3,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}
+          >
             <div>
-              <h4 className="font-medium mb-4 text-gray-800 dark:text-gray-100">Answer:</h4>
-              <p className="text-gray-800 dark:text-gray-200 min-h-[100px]">{answer}</p>
+              <Typography variant="h6" sx={{ mb: 2 }}>
+                Answer:
+              </Typography>
+              <Typography variant="body1" sx={{ minHeight: "100px" }}>
+                {answer}
+              </Typography>
             </div>
             <div className="flex gap-[19px]">
-              <button
+              <Button
+                variant="contained"
+                fullWidth
                 onClick={() => setIsFlipped(false)}
-                className="flex-1 py-2 rounded-[30px] bg-[#ffd4f7] dark:bg-blue-500 
-                  text-gray-800 dark:text-white hover:opacity-90 transition-all duration-300"
+                sx={{
+                  bgcolor: (theme) =>
+                    theme.palette.mode === "dark" ? theme.palette.primary.main : theme.palette.primary.main,
+                  color: (theme) => theme.palette.primary.contrastText,
+                  "&:hover": {
+                    bgcolor: (theme) =>
+                      theme.palette.mode === "dark" ? theme.palette.primary.dark : theme.palette.primary.light,
+                  },
+                }}
               >
                 Flip
-              </button>
-              <button
-                className="flex-1 py-2 rounded-[30px] bg-[#ffd4f7] dark:bg-blue-500 
-                  text-gray-800 dark:text-white hover:opacity-90 transition-all duration-300"
+              </Button>
+              <Button
+                variant="contained"
+                fullWidth
+                sx={{
+                  bgcolor: (theme) =>
+                    theme.palette.mode === "dark" ? theme.palette.primary.main : theme.palette.primary.main,
+                  color: (theme) => theme.palette.primary.contrastText,
+                  "&:hover": {
+                    bgcolor: (theme) =>
+                      theme.palette.mode === "dark" ? theme.palette.primary.dark : theme.palette.primary.light,
+                  },
+                }}
               >
                 Next
-              </button>
+              </Button>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </motion.div>
     </div>
   )
@@ -73,6 +163,4 @@ FlashCard.propTypes = {
   question: PropTypes.string.isRequired,
   answer: PropTypes.string.isRequired,
 }
-
-export default FlashCard
 
