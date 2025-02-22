@@ -1,9 +1,7 @@
-"use client"
-
-import { useState, useEffect } from "react"
-import { GraduationCap, Target, Clock } from "lucide-react"
-import FlashCard from "./components/FlashCard"
-import "./App.css"
+import { useState, useEffect } from "react";
+import { GraduationCap, Target, Clock } from "lucide-react";
+import FlashCard from "./components/FlashCard";
+import "./App.css";
 
 const sampleCards = [
   {
@@ -21,18 +19,22 @@ const sampleCards = [
     question: "What is the biggest planet in our Solar system?",
     answer: "Jupiter",
   },
-]
+];
 
 function App() {
-  const [darkMode, setDarkMode] = useState(false)
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("theme") === "dark"; // Load theme preference from localStorage
+  });
 
   useEffect(() => {
     if (darkMode) {
-      document.documentElement.classList.add("dark")
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark"); // Save preference
     } else {
-      document.documentElement.classList.remove("dark")
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light"); // Save preference
     }
-  }, [darkMode])
+  }, [darkMode]);
 
   return (
     <div className="min-h-screen bg-[#fbf8cc] dark:bg-[#1a1b1e] transition-colors duration-300">
@@ -111,8 +113,7 @@ function App() {
         <p>© 2025 Flashlearn. All rights reserved.</p>
       </footer>
     </div>
-  )
+  );
 }
 
-export default App
-
+export default App;

@@ -23,5 +23,6 @@ body {
 
 .dark {
   color-scheme: dark;
+  background-color: var(--dark-bg);
+  color: white;
 }
-
