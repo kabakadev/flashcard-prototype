@@ -1,9 +1,13 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { GraduationCap, Target, Clock } from "lucide-react"
+import { ThemeProvider } from "./components/ThemeProvider"
+import ThemeToggle from "./components/ThemeToggle"
 import FlashCard from "./components/FlashCard"
+import { GraduationCap, Target, Clock, BookOpen, Brain, Sparkles } from "lucide-react"
+import { motion } from "framer-motion"
 import "./App.css"
+import ProgressStats from "./components/ProgressStats"
+import FeatureCard from "./components/FeatureCard"
 
 const sampleCards = [
   {
@@ -23,94 +27,118 @@ const sampleCards = [
   },
 ]
 
+const features = [
+  {
+    Icon: GraduationCap,
+    title: "Build decks effortlessly",
+    description: "Create custom flashcard decks with our intuitive interface. Import content or start from scratch.",
+  },
+  {
+    Icon: Target,
+    title: "Track your Study progress",
+    description: "Monitor your learning journey with detailed analytics and progress tracking.",
+  },
+  {
+    Icon: Clock,
+    title: "Review at the perfect time",
+    description: "Our spaced repetition system ensures you review cards at optimal intervals.",
+  },
+  {
+    Icon: BookOpen,
+    title: "Smart Learning Paths",
+    description: "Follow structured learning paths designed to maximize your retention and understanding.",
+  },
+  {
+    Icon: Brain,
+    title: "Memory Techniques",
+    description: "Learn and apply proven memory techniques to enhance your study sessions.",
+  },
+  {
+    Icon: Sparkles,
+    title: "Personalized Insights",
+    description: "Get personalized recommendations based on your learning patterns and progress.",
+  },
+]
+
 function App() {
-  const [darkMode, setDarkMode] = useState(false)
-
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark")
-    } else {
-      document.documentElement.classList.remove("dark")
-    }
-  }, [darkMode])
-
   return (
-    <div className="min-h-screen bg-[#fbf8cc] dark:bg-[#1a1b1e] transition-colors duration-300">
-      {/* Navigation */}
-      <nav className="bg-[#a3c4f3] dark:bg-[#2d3748] p-4 transition-colors duration-300">
-        <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Flashlearn</h1>
-          <div className="flex gap-4 items-center">
-            <button
-              onClick={() => setDarkMode(!darkMode)}
-              className="px-4 py-2 rounded-lg bg-[#f1c0e8] dark:bg-blue-500 text-gray-800 dark:text-white hover:opacity-90 transition-all duration-300"
-            >
-              {darkMode ? "Light Mode" : "Dark Mode"}
-            </button>
-            <button className="px-4 py-2 rounded-lg bg-[#f1c0e8] dark:bg-blue-500 text-gray-800 dark:text-white hover:opacity-90 transition-all duration-300">
-              login
-            </button>
-          </div>
-        </div>
-      </nav>
-
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-12">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold mb-4 text-gray-800 dark:text-white">
-            Master Any Subject with Smart Flashcards! 📚
-          </h2>
-          <p className="text-lg mb-8 text-gray-600 dark:text-gray-300">
-            Create personalized decks, track your progress, and optimize your learning with spaced repetition.
-          </p>
-
-          {/* Features */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            {[
-              { Icon: GraduationCap, text: "Build decks effortlessly" },
-              { Icon: Target, text: "Track your Study progress" },
-              { Icon: Clock, text: "Review at the perfect time" },
-            ].map(({ Icon, text }, index) => (
-              <div key={index} className="bg-[#98f5e1] dark:bg-gray-800 p-6 rounded-lg transition-colors duration-300">
-                <Icon className="w-8 h-8 mx-auto mb-4 text-gray-800 dark:text-blue-400" />
-                <p className="text-center text-gray-800 dark:text-white">{text}</p>
-              </div>
-            ))}
-          </div>
-
-          <button className="px-8 py-3 rounded-lg bg-[#f1c0e8] dark:bg-blue-500 text-gray-800 dark:text-white hover:opacity-90 transition-all duration-300 mb-16">
-            Start learning today
-          </button>
-
-          {/* Flashcards Section */}
-          <h3 className="text-2xl font-bold mb-8 text-gray-800 dark:text-white">Try Our Interactive Flashcards</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-            {sampleCards.map((card) => (
-              <FlashCard key={card.id} {...card} />
-            ))}
-          </div>
-
-          {/* Bottom Section */}
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            <div className="text-left">
-              <h3 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">
-                Understand Any Topic, One Flashcard at a Time
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                Create and study your own flashcards with an intuitive, distraction-free experience. Track your progress
-                and retain knowledge more effectively.
-              </p>
+    <ThemeProvider>
+      <div className="min-h-screen bg-[#FBF8CC] dark:bg-[#1a1b1e] transition-colors duration-300">
+        {/* Navigation */}
+        <nav className="bg-[#b4d4ff] dark:bg-[#2d3748] p-4 sticky top-0 z-50 transition-colors duration-300">
+          <div className="container mx-auto flex justify-between items-center px-4">
+            <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Flashlearn</h1>
+            <div className="flex gap-4 items-center">
+              <ThemeToggle />
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="px-4 py-2 rounded-lg bg-[#ffd4f7] dark:bg-blue-500 text-gray-800 dark:text-white 
+                  hover:opacity-90 transition-colors duration-300"
+              >
+                login
+              </motion.button>
             </div>
-            <div className="bg-[#98f5e1] dark:bg-gray-800 rounded-lg aspect-square transition-colors duration-300" />
           </div>
-        </div>
-      </main>
+        </nav>
 
-      {/* Footer */}
-      <footer className="py-8 text-center text-gray-600 dark:text-gray-400">
-        <p>© 2025 Flashlearn. All rights reserved.</p>
-      </footer>
-    </div>
+        {/* Main Content */}
+        <main className="container mx-auto px-4 py-12">
+          <div className="text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-800 dark:text-white px-4 py-2">
+              Master Any Subject with Smart Flashcards! 📚
+            </h2>
+            <p className="text-lg text-gray-600 dark:text-gray-300 mb-16 max-w-2xl mx-auto px-4">
+              Create personalized decks, track your progress, and optimize your learning with spaced repetition.
+            </p>
+
+            {/* Features Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+              {features.map((feature, index) => (
+                <FeatureCard key={index} {...feature} />
+              ))}
+            </div>
+
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="px-6 py-3 rounded-none bg-[#ffd4f7] dark:bg-blue-500 text-gray-800 dark:text-white 
+                hover:opacity-90 transition-colors duration-300 mb-16 text-lg font-light"
+            >
+              Start learning today
+            </motion.button>
+
+            {/* Flashcards Section */}
+            <h3 className="text-2xl font-bold mb-8 text-gray-800 dark:text-white">Try Our Interactive Flashcards</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+              {sampleCards.map((card) => (
+                <FlashCard key={card.id} {...card} />
+              ))}
+            </div>
+
+            {/* Progress Stats Section */}
+            <ProgressStats />
+          </div>
+        </main>
+
+        <footer className="text-center text-gray-600 dark:text-gray-400 py-8 mt-16 border-t border-gray-200 dark:border-gray-800">
+          <div className="container mx-auto px-4">
+            <p className="mb-4">© 2025 Flashlearn. All rights reserved.</p>
+            <div className="flex justify-center gap-4 text-sm">
+              <a href="#" className="hover:text-gray-800 dark:hover:text-white transition-colors">
+                Terms
+              </a>
+              <a href="#" className="hover:text-gray-800 dark:hover:text-white transition-colors">
+                Privacy
+              </a>
+              <a href="#" className="hover:text-gray-800 dark:hover:text-white transition-colors">
+                Contact
+              </a>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </ThemeProvider>
   )
 }
 
