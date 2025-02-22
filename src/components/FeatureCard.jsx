@@ -2,9 +2,12 @@
 
 import { motion } from "framer-motion"
 import PropTypes from "prop-types"
-import { Card, CardContent, Typography } from "@mui/material"
+import { Card, CardContent, Typography, useTheme } from "@mui/material"
 
 export default function FeatureCard({ Icon, title, description }) {
+  const theme = useTheme()
+  const isDarkMode = theme.palette.mode === "dark"
+
   return (
     <motion.div whileHover={{ scale: 1.02 }}>
       <Card
@@ -22,7 +25,7 @@ export default function FeatureCard({ Icon, title, description }) {
         <CardContent sx={{ p: 4, display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
           <div
             style={{
-              backgroundColor: "#3b82f6",
+              backgroundColor: isDarkMode ? "#3b82f6" : "#ffffff",
               padding: "10px",
               borderRadius: "50%",
               display: "flex",
@@ -30,12 +33,13 @@ export default function FeatureCard({ Icon, title, description }) {
               justifyContent: "center",
               width: "40px",
               height: "40px",
+              boxShadow: isDarkMode ? "none" : "0 2px 4px rgba(0,0,0,0.1)",
             }}
           >
             <Icon
               className="w-5 h-5"
               style={{
-                color: "#ffffff",
+                color: isDarkMode ? "#ffffff" : "#3b82f6",
                 strokeWidth: 2.5,
               }}
             />

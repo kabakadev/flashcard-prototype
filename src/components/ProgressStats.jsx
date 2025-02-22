@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import { Brain, Trophy, Clock, Target } from "lucide-react"
-import { Card, CardContent, Typography } from "@mui/material"
+import { Card, CardContent, Typography, useTheme } from "@mui/material"
 import { CircularProgress } from "./CircularProgress"
 
 const stats = [
@@ -33,6 +33,9 @@ const stats = [
 ]
 
 export default function ProgressStats() {
+  const theme = useTheme()
+  const isDarkMode = theme.palette.mode === "dark"
+
   return (
     <div className="max-w-6xl mx-auto px-4">
       <motion.div
@@ -111,7 +114,7 @@ export default function ProgressStats() {
                 >
                   <div
                     style={{
-                      backgroundColor: "#3b82f6",
+                      backgroundColor: isDarkMode ? "#3b82f6" : "#ffffff",
                       padding: "10px",
                       borderRadius: "50%",
                       display: "flex",
@@ -120,12 +123,13 @@ export default function ProgressStats() {
                       width: "40px",
                       height: "40px",
                       marginBottom: "16px",
+                      boxShadow: isDarkMode ? "none" : "0 2px 4px rgba(0,0,0,0.1)",
                     }}
                   >
                     <stat.icon
                       className="w-5 h-5"
                       style={{
-                        color: "#ffffff",
+                        color: isDarkMode ? "#ffffff" : "#3b82f6",
                         strokeWidth: 2.5,
                       }}
                     />
