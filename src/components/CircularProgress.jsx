@@ -2,9 +2,12 @@
 
 import { motion } from "framer-motion"
 import PropTypes from "prop-types"
-import { Box, CircularProgress as MUICircularProgress, Typography } from "@mui/material"
+import { Box, CircularProgress as MUICircularProgress, Typography, useTheme } from "@mui/material"
 
 export function CircularProgress({ percentage, label, size = 120 }) {
+  const theme = useTheme()
+  const isDarkMode = theme.palette.mode === "dark"
+
   return (
     <Box
       sx={{
@@ -21,7 +24,7 @@ export function CircularProgress({ percentage, label, size = 120 }) {
           variant="determinate"
           value={100}
           size={size}
-          thickness={4}
+          thickness={3.2}
           sx={{
             color: (theme) => (theme.palette.mode === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"),
           }}
@@ -31,11 +34,11 @@ export function CircularProgress({ percentage, label, size = 120 }) {
           variant="determinate"
           value={percentage}
           size={size}
-          thickness={4}
+          thickness={3.2}
           sx={{
             position: "absolute",
             left: 0,
-            color: "#3b82f6",
+            color: isDarkMode ? "#3b82f6" : "#ffd4f7",
             circle: {
               strokeLinecap: "round",
             },

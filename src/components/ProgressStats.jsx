@@ -133,7 +133,7 @@ export default function ProgressStats() {
                     <stat.icon
                       className="w-5 h-5"
                       style={{
-                        color: isDarkMode ? "#ffffff" : "#3b82f6",
+                        color: isDarkMode ? "#ffffff" : "#000000",
                         strokeWidth: 2.5,
                       }}
                     />
