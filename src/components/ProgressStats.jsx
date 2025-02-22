@@ -54,10 +54,11 @@ export default function ProgressStats() {
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Circular Progress Card */}
         <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
           <Card
             sx={{
-              height: "400px",
+              height: "100%",
               bgcolor: "background.paper",
               transition: "all 0.3s ease",
               "&:hover": {
@@ -68,26 +69,28 @@ export default function ProgressStats() {
               },
             }}
           >
-            <CardContent sx={{ p: 4 }}>
-              <div className="grid grid-cols-2 gap-6 h-full items-center">
+            <CardContent sx={{ p: 6 }}>
+              <div className="grid grid-cols-2 gap-8 h-full items-center">
                 {[
                   { value: 85, label: "Weekly Goal" },
                   { value: 92, label: "Mastery Level" },
                   { value: 78, label: "Study Streak" },
                   { value: 95, label: "Focus Score" },
                 ].map((item, i) => (
-                  <CircularProgress key={i} percentage={item.value} label={item.label} size={100} />
+                  <CircularProgress key={i} percentage={item.value} label={item.label} />
                 ))}
               </div>
             </CardContent>
           </Card>
         </motion.div>
 
+        {/* Stats Cards */}
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
-          className="grid grid-cols-2 gap-4 h-[400px]"
+          className="grid grid-cols-2 gap-4"
+          style={{ height: "100%" }}
         >
           {stats.map((stat, index) => (
             <motion.div
@@ -95,6 +98,7 @@ export default function ProgressStats() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
+              style={{ height: "100%" }}
             >
               <Card
                 sx={{
@@ -139,11 +143,11 @@ export default function ProgressStats() {
                     whileInView={{ opacity: 1 }}
                     transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
                   >
-                    <Typography variant="h4" sx={{ color: "text.primary", mb: 1 }}>
+                    <Typography variant="h4" sx={{ color: "text.primary", mb: 1, fontWeight: "bold" }}>
                       {stat.value}
                       {stat.label.includes("Rate") || stat.label.includes("Accuracy") ? "%" : ""}
                     </Typography>
-                    <Typography variant="subtitle1" sx={{ color: "text.primary", mb: 0.5 }}>
+                    <Typography variant="subtitle1" sx={{ color: "text.primary", mb: 0.5, fontWeight: "medium" }}>
                       {stat.label}
                     </Typography>
                     <Typography variant="body2" sx={{ color: "text.secondary" }}>
