@@ -9,9 +9,13 @@ export default function ThemeToggle() {
   const { theme, setTheme } = useTheme()
   const isDark = theme === "dark"
 
+  const toggleTheme = () => {
+    setTheme(isDark ? "light" : "dark")
+  }
+
   return (
     <IconButton
-      onClick={() => setTheme(isDark ? "light" : "dark")}
+      onClick={toggleTheme}
       sx={{
         position: "relative",
         width: "56px",

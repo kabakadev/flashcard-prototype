@@ -1,57 +1,58 @@
 "use client"
 
 import { createContext, useContext, useState, useEffect } from "react"
-import { ThemeProvider as MUIThemeProvider } from "@mui/material/styles"
-import CssBaseline from "@mui/material/CssBaseline"
-import { theme as lightTheme, darkTheme } from "../../theme"
 
 const ThemeContext = createContext({
   theme: "light",
   setTheme: () => null,
 })
 
-export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState("light")
-
-  useEffect(() => {
-    // Safely get theme from localStorage
-    const savedTheme = typeof window !== "undefined" ? localStorage.getItem("theme") : "light"
-
-    if (savedTheme) {
-      setTheme(savedTheme)
-    }
-  }, [])
-
-  useEffect(() => {
-    // Update document class and localStorage
+export function ThemeProvider({ children, storageKey = "ui-theme" }) {
+  const [theme, setTheme] = useState(() => {
+    // Check localStorage first
     if (typeof window !== "undefined") {
-      const root = window.document.documentElement
-      root.classList.remove("light", "dark")
-      root.classList.add(theme)
-      localStorage.setItem("theme", theme)
+      const savedTheme = localStorage.getItem(storageKey)
+      if (savedTheme) return savedTheme
+
+      // If no saved theme, check system preference
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
     }
-  }, [theme])
+    return "light"
+  })
 
-  const value = {
-    theme,
-    setTheme: (newTheme) => {
-      setTheme(newTheme)
-    },
-  }
+  useEffect(() => {
+    const root = document.documentElement
+    root.classList.remove("light", "dark")
+    root.classList.add(theme)
 
-  return (
-    <ThemeContext.Provider value={value}>
-      <MUIThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
-        <CssBaseline />
-        {children}
-      </MUIThemeProvider>
-    </ThemeContext.Provider>
-  )
+    try {
+      localStorage.setItem(storageKey, theme)
+    } catch (e) {
+      console.error("Failed to save theme preference:", e)
+    }
+  }, [theme, storageKey])
+
+  // Listen for system theme changes
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
+
+    const handleChange = (e) => {
+      // Only update if there's no user preference stored
+      if (!localStorage.getItem(storageKey)) {
+        setTheme(e.matches ? "dark" : "light")
+      }
+    }
+
+    mediaQuery.addListener(handleChange)
+    return () => mediaQuery.removeListener(handleChange)
+  }, [storageKey])
+
+  return <ThemeContext.Provider value={{ theme, setTheme }}>{children}</ThemeContext.Provider>
 }
 
 export const useTheme = () => {
   const context = useContext(ThemeContext)
-  if (context === undefined) {
+  if (!context) {
     throw new Error("useTheme must be used within a ThemeProvider")
   }
   return context

@@ -1,58 +1,64 @@
-import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useUser } from "../context/UserContext";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 
 const Signup = () => {
-  const { signup } = useUser(); // Get signup function from context
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
+  const { signup } = useUser();
   const navigate = useNavigate();
 
-  const handleSignup = async (e) => {
-    e.preventDefault();
-    setError(null);
-
-    try {
-      const success = await signup(email, username, password); // Wait for signup & login
-      if (success) {
-        alert("Signup successful!");
-        navigate("/dashboard"); // Redirect after successful signup
-      }
-    } catch (error) {
-      setError(error.message || "Signup failed");
-    }
-  };
+  // Validation schema using Yup
+  const validationSchema = Yup.object({
+    email: Yup.string().email("Invalid email address").required("Email is required"),
+    username: Yup.string().min(3, "Username must be at least 3 characters").required("Username is required"),
+    password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+  });
 
   return (
     <div>
       <h2>Signup</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleSignup}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit">Signup</button>
-      </form>
+      <Formik
+        initialValues={{ email: "", username: "", password: "" }}
+        validationSchema={validationSchema}
+        onSubmit={async (values, { setSubmitting, setErrors }) => {
+          try {
+            const success = await signup(values.email, values.username, values.password);
+            if (success) {
+              alert("Signup successful!");
+              navigate("/dashboard");
+            }
+          } catch (error) {
+            setErrors({ general: error.message || "Signup failed" });
+          }
+          setSubmitting(false);
+        }}
+      >
+        {({ isSubmitting, errors }) => (
+          <Form>
+            {errors.general && <p style={{ color: "red" }}>{errors.general}</p>}
+
+            <div>
+              <Field type="email" name="email" placeholder="Email" />
+              <ErrorMessage name="email" component="p" style={{ color: "red" }} />
+            </div>
+
+            <div>
+              <Field type="text" name="username" placeholder="Username" />
+              <ErrorMessage name="username" component="p" style={{ color: "red" }} />
+            </div>
+
+            <div>
+              <Field type="password" name="password" placeholder="Password" />
+              <ErrorMessage name="password" component="p" style={{ color: "red" }} />
+            </div>
+
+            <button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Signing up..." : "Signup"}
+            </button>
+          </Form>
+        )}
+      </Formik>
+
       <p>
         Already have an account? <Link to="/login">Login here</Link>
       </p>
