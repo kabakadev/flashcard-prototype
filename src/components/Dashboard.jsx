@@ -1,43 +1,30 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "./context/UserContext";
 
 const Dashboard = () => {
-  const [user, setUser] = useState(null);
-  const token = localStorage.getItem("token");
+  const { user, isAuthenticated, loading, logout } = useUser();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!token) {
-        navigate("/login"); // Redirect if not logged in
-      return;
+    if (!loading && !isAuthenticated) {
+      navigate("/login");
     }
+  }, [loading, isAuthenticated, navigate]);
 
-    fetch("http://localhost:5000/user", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // Attach token
-      },
-    })
-      .then((res) => {
-        console.log("Response received:",res)
-        return res.json()
-      })
-      .then((data) => {
-        console.log(data)
-        setUser(data.username)
-      })
-      .catch(() => {
-        alert("Session expired. Please log in again.");
-        localStorage.removeItem("token");
-        navigate("/login");
-      });
-  }, [token]);
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div>
       <h2>Dashboard</h2>
-      {user ? <p>Welcome, {user}!</p> : <p>Loading...</p>}
+      {user ? (
+        <>
+          <p>Welcome, {user.username}!</p>
+          <button onClick={logout}>Logout</button>
+        </>
+      ) : (
+        <p>Error loading user data.</p>
+      )}
     </div>
   );
 };
