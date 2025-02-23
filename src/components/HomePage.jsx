@@ -3,10 +3,10 @@
 import { motion } from "framer-motion"
 import { GraduationCap, Target, Clock, BookOpen, Brain, Sparkles } from "lucide-react"
 import { AppBar, Toolbar, Typography, Button, Container } from "@mui/material"
-import ThemeToggle from "./ThemeToggle"
-import FlashCard from "./FlashCard"
-import ProgressStats from "./ProgressStats"
-import FeatureCard from "./FeatureCard"
+import ThemeToggle from "./ThemeComponents/ThemeToggle"
+import FlashCard from "./homepageComponents/FlashCard"
+import ProgressStats from "./homepageComponents/ProgressStats"
+import FeatureCard from "./homepageComponents/FeatureCard"
 
 // Sample data remains the same
 const sampleCards = [
