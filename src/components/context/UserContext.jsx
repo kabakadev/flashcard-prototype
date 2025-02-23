@@ -50,7 +50,9 @@ export const UserProvider = ({ children }) => {
 
       if (!response.ok) throw new Error("Signup failed");
 
-      login(email, password);
+      // Wait for login to complete
+    const success = await login(email, password);
+    return success;
     } catch (error) {
       console.error("Signup error:", error);
     }
@@ -68,12 +70,14 @@ export const UserProvider = ({ children }) => {
 
       if (response.ok) {
         localStorage.setItem(TOKEN_KEY, data.token);
-        fetchUser();
+        await fetchUser();
+        return true
       } else {
         throw new Error(data.error || "Login failed");
       }
     } catch (error) {
       console.error("Login error:", error);
+      throw error;
     }
   };
 
