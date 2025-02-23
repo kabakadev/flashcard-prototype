@@ -7,6 +7,7 @@ import ThemeToggle from "./ThemeComponents/ThemeToggle"
 import FlashCard from "./homepageComponents/FlashCard"
 import ProgressStats from "./homepageComponents/ProgressStats"
 import FeatureCard from "./homepageComponents/FeatureCard"
+import { useNavigate } from "react-router-dom";
 
 // Sample data remains the same
 const sampleCards = [
@@ -61,6 +62,7 @@ const features = [
 ]
 
 export default function Homepage() {
+  const navigate = useNavigate();
   return (
     <div
       style={{
@@ -96,6 +98,7 @@ export default function Homepage() {
               component={motion.button}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
+              onClick={() => navigate("/login")}
             >
               Login
             </Button>
