@@ -3,14 +3,43 @@
 @tailwind utilities;
 
 :root {
-  --light-bg: #fbf8cc;
-  --dark-bg: #1a1b1e;
-  --header-light: #a3c4f3;
-  --header-dark: #2d3748;
+  --bg-light: #FBF8CC;
+  --bg-dark: #1a1b1e;
+  --nav-light: #b4d4ff;
+  --nav-dark: #2d3748;
   --card-light: #98f5e1;
   --card-dark: #1f2937;
-  --button-light: #f1c0e8;
+  --button-light: #ffd4f7;
   --button-dark: #3b82f6;
+}
+
+/* Smooth theme transitions */
+.transition-colors {
+  transition-property: background-color, border-color, color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+
+/* Card flip styles */
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Theme transition styles */
+.dark {
+  color-scheme: dark;
+  background-color: var(--bg-dark);
+  color: white;
+}
+
+/* Ensure text remains readable during transition */
+.text-gray-800 {
+  transition: color 0.3s ease;
+}
+
+.dark .text-gray-100 {
+  transition: color 0.3s ease;
 }
 
 body {
@@ -21,7 +50,33 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.dark {
-  color-scheme: dark;
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  h2 {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+
+  .grid {
+    gap: 1rem;
+  }
 }
 
+/* Better Card Hover Effects */
+@keyframes subtle-glow {
+  0% {
+    box-shadow: 0 0 0 rgba(152, 245, 225, 0);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(152, 245, 225, 0.2);
+  }
+}
+
+.hover-glow:hover {
+  animation: subtle-glow 0.3s ease-in-out forwards;
+}
