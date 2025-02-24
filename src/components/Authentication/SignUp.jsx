@@ -158,7 +158,7 @@ const Signup = () => {
                       component={RouterLink}
                       to="/login"
                       sx={{
-                        color: (theme) => (theme.palette.mode === "dark" ? "#3b82f6" : "#ffd4f7"),
+                        color: (theme) => (theme.palette.mode === "dark" ? "#3b82f6" : "#ff01f0"),
                         textDecoration: "none",
                         "&:hover": {
                           textDecoration: "underline",
