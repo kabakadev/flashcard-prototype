@@ -10,6 +10,8 @@ import Dashboard from "./components/Dashboard";
 import MyDecks from "./components/MyDecks";
 import DeckView from "./components/DeckView";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Study from "./components/Study";
+import StudyMode from "./components/StudyMode";
 
 // Wrap the routes with MUI theme provider
 function AppContent() {
@@ -26,6 +28,8 @@ function AppContent() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/mydecks" element={<MyDecks />} />
           <Route path="/mydecks/:deckId" element={<DeckView />} />
+          <Route path="/study" element={<Study />} />
+          <Route path="/study/:deckId" element={<StudyMode />} />
         </Routes>
       </Router>
     </MUIThemeProvider>
