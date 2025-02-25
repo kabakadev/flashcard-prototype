@@ -12,15 +12,16 @@ import {
   Modal,
   TextField,
   Box,
+  CircularProgress,
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 const MyDecks = () => {
-  const { user, isAuthenticated, loading } = useUser();
+  const { user, isAuthenticated, loading: userLoading } = useUser();
   const navigate = useNavigate();
-  const [decks, setDecks] = useState([]);
+  const [decks, setDecks] = useState([]); // Default to an empty array
   const [modalOpen, setModalOpen] = useState(false);
   const [editingDeck, setEditingDeck] = useState(null);
   const [deckTitle, setDeckTitle] = useState("");
@@ -28,31 +29,46 @@ const MyDecks = () => {
   const [deckSubject, setDeckSubject] = useState("");
   const [deckCategory, setDeckCategory] = useState("");
   const [deckDifficulty, setDeckDifficulty] = useState(3);
+  const [loading, setLoading] = useState(true);
 
   const API_URL = "http://localhost:5000";
 
   useEffect(() => {
-    if (!loading && !isAuthenticated) {
+    if (!userLoading && !isAuthenticated) {
       navigate("/login");
     }
-  }, [loading, isAuthenticated, navigate]);
+  }, [userLoading, isAuthenticated, navigate]);
 
   useEffect(() => {
     const fetchDecks = async () => {
       if (!user) return;
+
       try {
         const token = localStorage.getItem("authToken");
         const response = await fetch(`${API_URL}/decks`, {
           headers: { Authorization: `Bearer ${token}` },
         });
+
         if (response.ok) {
           const data = await response.json();
-          setDecks(data);
+          console.log("API Response:", data); // Debugging: Log the API response
+
+          // Ensure the response is an array
+          if (Array.isArray(data)) {
+            setDecks(data);
+          } else {
+            console.error("API response is not an array:", data);
+            setDecks([]); // Set decks to an empty array if the response is invalid
+          }
         } else {
           console.error("Failed to fetch decks");
+          setDecks([]); // Set decks to an empty array if the request fails
         }
       } catch (error) {
         console.error("Error fetching decks:", error);
+        setDecks([]); // Set decks to an empty array if there's an error
+      } finally {
+        setLoading(false); // Set loading to false after fetching
       }
     };
 
@@ -124,7 +140,20 @@ const MyDecks = () => {
     }
   };
 
-  if (loading) return <Typography>Loading...</Typography>;
+  if (userLoading || loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <div>
@@ -143,45 +172,51 @@ const MyDecks = () => {
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {decks.map((deck) => (
-            <Card key={deck.id}>
-              <CardActionArea onClick={() => navigate(`/mydecks/${deck.id}`)}>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    {deck.title}
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary">
-                    {deck.description}
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-              <div className="flex justify-between p-2">
-                <div>
-                  <IconButton
-                    onClick={() => {
-                      setEditingDeck(deck);
-                      setDeckTitle(deck.title);
-                      setDeckDescription(deck.description);
-                      setDeckSubject(deck.subject);
-                      setDeckCategory(deck.category);
-                      setDeckDifficulty(deck.difficulty);
-                      setModalOpen(true);
-                    }}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton onClick={() => handleDeleteDeck(deck.id)}>
-                    <DeleteIcon />
+        {decks.length === 0 ? (
+          <Typography variant="body1" color="textSecondary">
+            No decks found. Create a new deck to get started!
+          </Typography>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {decks.map((deck) => (
+              <Card key={deck.id}>
+                <CardActionArea onClick={() => navigate(`/mydecks/${deck.id}`)}>
+                  <CardContent>
+                    <Typography variant="h6" gutterBottom>
+                      {deck.title}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary">
+                      {deck.description}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+                <div className="flex justify-between p-2">
+                  <div>
+                    <IconButton
+                      onClick={() => {
+                        setEditingDeck(deck);
+                        setDeckTitle(deck.title);
+                        setDeckDescription(deck.description);
+                        setDeckSubject(deck.subject);
+                        setDeckCategory(deck.category);
+                        setDeckDifficulty(deck.difficulty);
+                        setModalOpen(true);
+                      }}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton onClick={() => handleDeleteDeck(deck.id)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </div>
+                  <IconButton onClick={() => navigate(`/mydecks/${deck.id}`)}>
+                    <VisibilityIcon />
                   </IconButton>
                 </div>
-                <IconButton onClick={() => navigate(`/mydecks/${deck.id}`)}>
-                  <VisibilityIcon />
-                </IconButton>
-              </div>
-            </Card>
-          ))}
-        </div>
+              </Card>
+            ))}
+          </div>
+        )}
 
         {/* Create/Edit Deck Modal */}
         <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
