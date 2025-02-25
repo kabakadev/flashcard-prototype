@@ -8,6 +8,10 @@ import {
   CardContent,
   Typography,
   IconButton,
+  Button,
+  Modal,
+  TextField,
+  Box,
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
@@ -17,7 +21,7 @@ const MyDecks = () => {
   const { user, isAuthenticated, loading } = useUser();
   const navigate = useNavigate();
   const [decks, setDecks] = useState([]);
-  const [showModal, setShowModal] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const [editingDeck, setEditingDeck] = useState(null);
   const [deckTitle, setDeckTitle] = useState("");
   const [deckDescription, setDeckDescription] = useState("");
@@ -72,9 +76,9 @@ const MyDecks = () => {
         body: JSON.stringify({
           title: deckTitle,
           description: deckDescription,
-          subject: deckSubject, // ✅ Add this
-          category: deckCategory, // ✅ Add this
-          difficulty: deckDifficulty, // ✅ Add thi
+          subject: deckSubject,
+          category: deckCategory,
+          difficulty: deckDifficulty,
         }),
       });
 
@@ -85,13 +89,13 @@ const MyDecks = () => {
             ? decks.map((d) => (d.id === newDeck.id ? newDeck : d))
             : [...decks, newDeck]
         );
-        setShowModal(false);
+        setModalOpen(false);
         setEditingDeck(null);
         setDeckTitle("");
         setDeckDescription("");
-        setDeckSubject(""); // ✅ Clear input fields
-        setDeckCategory(""); // ✅ Clear input fields
-        setDeckDifficulty(3); // ✅ Reset to default value
+        setDeckSubject("");
+        setDeckCategory("");
+        setDeckDifficulty(3);
       } else {
         console.error("Failed to save deck");
       }
@@ -120,125 +124,146 @@ const MyDecks = () => {
     }
   };
 
+  if (loading) return <Typography>Loading...</Typography>;
+
   return (
-    <div className="p-6 max-w-4xl mx-auto shadow-md rounded-lg">
+    <div>
       <NavBar />
-      <h2 className="text-2xl font-bold mb-4">My Decks</h2>
-      <button
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-        onClick={() => setShowModal(true)}
-      >
-        Create New Deck
-      </button>
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-        {decks.map((deck) => (
-          <Card key={deck.id}>
-            <CardActionArea onClick={() => navigate(`/mydecks/${deck.id}`)}>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  {deck.title}
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  {deck.description}
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-            <div className="flex justify-between p-2">
-              <div>
-                <IconButton
-                  className="text-yellow-500"
-                  onClick={() => {
-                    setEditingDeck(deck);
-                    setDeckTitle(deck.title);
-                    setDeckDescription(deck.description);
-                    setShowModal(true);
-                  }}
-                >
-                  <EditIcon />
-                </IconButton>
-                <IconButton
-                  className="text-red-500"
-                  onClick={() => handleDeleteDeck(deck.id)}
-                >
-                  <DeleteIcon />
+      <div className="mt-4 p-4">
+        <div className="flex justify-between items-center mb-4">
+          <Typography variant="h4" gutterBottom>
+            My Decks
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setModalOpen(true)}
+          >
+            Create New Deck
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {decks.map((deck) => (
+            <Card key={deck.id}>
+              <CardActionArea onClick={() => navigate(`/mydecks/${deck.id}`)}>
+                <CardContent>
+                  <Typography variant="h6" gutterBottom>
+                    {deck.title}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    {deck.description}
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+              <div className="flex justify-between p-2">
+                <div>
+                  <IconButton
+                    onClick={() => {
+                      setEditingDeck(deck);
+                      setDeckTitle(deck.title);
+                      setDeckDescription(deck.description);
+                      setDeckSubject(deck.subject);
+                      setDeckCategory(deck.category);
+                      setDeckDifficulty(deck.difficulty);
+                      setModalOpen(true);
+                    }}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton onClick={() => handleDeleteDeck(deck.id)}>
+                    <DeleteIcon />
+                  </IconButton>
+                </div>
+                <IconButton onClick={() => navigate(`/mydecks/${deck.id}`)}>
+                  <VisibilityIcon />
                 </IconButton>
               </div>
-              <IconButton onClick={() => navigate(`/mydecks/${deck.id}`)}>
-                <VisibilityIcon />
-              </IconButton>
-            </div>
-          </Card>
-        ))}
-      </div>
+            </Card>
+          ))}
+        </div>
 
-      {showModal && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-black p-4 rounded-lg w-96">
-            <h2 className="text-xl font-bold mb-2">
+        {/* Create/Edit Deck Modal */}
+        <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 400,
+              bgcolor: "background.paper",
+              boxShadow: 24,
+              p: 4,
+              borderRadius: 2,
+              backgroundColor: "#0a192f",
+              color: "white",
+            }}
+          >
+            <Typography variant="h6" gutterBottom>
               {editingDeck ? "Edit Deck" : "Create New Deck"}
-            </h2>
-            <input
-              className="border text-blue-400 p-2 w-full mb-2"
-              placeholder="Deck Title"
+            </Typography>
+            <TextField
+              label="Deck Title"
               value={deckTitle}
               onChange={(e) => setDeckTitle(e.target.value)}
+              fullWidth
+              margin="normal"
+              InputLabelProps={{ style: { color: "white" } }}
+              InputProps={{ style: { color: "white" } }}
             />
-            <textarea
-              className="border text-blue-400 p-2 w-full mb-2"
-              placeholder="Deck Description"
+            <TextField
+              label="Deck Description"
               value={deckDescription}
               onChange={(e) => setDeckDescription(e.target.value)}
+              fullWidth
+              margin="normal"
+              InputLabelProps={{ style: { color: "white" } }}
+              InputProps={{ style: { color: "white" } }}
             />
-            <input
-              className="border text-blue-400 p-2 w-full mb-2"
-              placeholder="Subject"
+            <TextField
+              label="Subject"
               value={deckSubject}
               onChange={(e) => setDeckSubject(e.target.value)}
+              fullWidth
+              margin="normal"
+              InputLabelProps={{ style: { color: "white" } }}
+              InputProps={{ style: { color: "white" } }}
             />
-            <input
-              className="border text-blue-400 p-2 w-full mb-2"
-              placeholder="Category"
+            <TextField
+              label="Category"
               value={deckCategory}
               onChange={(e) => setDeckCategory(e.target.value)}
+              fullWidth
+              margin="normal"
+              InputLabelProps={{ style: { color: "white" } }}
+              InputProps={{ style: { color: "white" } }}
             />
-            <input
+            <TextField
               type="number"
-              className="border text-blue-400 p-2 w-full mb-2"
-              placeholder="Difficulty (1-5)"
+              label="Difficulty (1-5)"
               value={deckDifficulty}
-              min="1"
-              max="5"
               onChange={(e) =>
                 setDeckDifficulty(
                   Math.min(5, Math.max(1, Number(e.target.value)))
                 )
               }
+              fullWidth
+              margin="normal"
+              InputLabelProps={{ style: { color: "white" } }}
+              InputProps={{ style: { color: "white" } }}
             />
-            <div className="flex justify-end">
-              <button
-                className="bg-green-500 px-4 py-2 rounded mr-2"
-                onClick={handleCreateOrUpdateDeck}
-              >
+            <div className="flex justify-between mt-2">
+              <Button variant="contained" onClick={handleCreateOrUpdateDeck}>
                 Save
-              </button>
-              <button
-                className="bg-gray-500 px-4 py-2 rounded"
-                onClick={() => {
-                  setShowModal(false);
-                  setEditingDeck(null);
-                  setDeckTitle("");
-                  setDeckDescription("");
-                  setDeckSubject("");
-                  setDeckCategory("");
-                  setDeckDifficulty(3);
-                }}
-              >
+              </Button>
+              <Button variant="outlined" onClick={() => setModalOpen(false)}>
                 Cancel
-              </button>
+              </Button>
             </div>
-          </div>
-        </div>
-      )}
+          </Box>
+        </Modal>
+      </div>
     </div>
   );
 };
