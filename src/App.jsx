@@ -8,6 +8,7 @@ import Login from "./components/Authentication/Login";
 import Signup from "./components/Authentication/SignUp";
 import Dashboard from "./components/Dashboard";
 import MyDecks from "./components/MyDecks";
+import DeckView from "./components/DeckView";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Wrap the routes with MUI theme provider
@@ -24,6 +25,7 @@ function AppContent() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/mydecks" element={<MyDecks />} />
+          <Route path="/mydecks/:deckId" element={<DeckView />} />
         </Routes>
       </Router>
     </MUIThemeProvider>

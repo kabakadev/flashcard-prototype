@@ -2,6 +2,16 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "./context/UserContext";
 import NavBar from "./NavBar";
+import {
+  Card,
+  CardActionArea,
+  CardContent,
+  Typography,
+  IconButton,
+} from "@mui/material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const MyDecks = () => {
   const { user, isAuthenticated, loading } = useUser();
@@ -120,35 +130,47 @@ const MyDecks = () => {
       >
         Create New Deck
       </button>
-      <ul className="mt-4">
+      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
         {decks.map((deck) => (
-          <li key={deck.id} className="p-2 border-b flex justify-between">
-            <div>
-              <h3 className="text-lg font-semibold">{deck.title}</h3>
-              <p>{deck.description}</p>
+          <Card key={deck.id}>
+            <CardActionArea onClick={() => navigate(`/mydecks/${deck.id}`)}>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  {deck.title}
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  {deck.description}
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+            <div className="flex justify-between p-2">
+              <div>
+                <IconButton
+                  className="text-yellow-500"
+                  onClick={() => {
+                    setEditingDeck(deck);
+                    setDeckTitle(deck.title);
+                    setDeckDescription(deck.description);
+                    setShowModal(true);
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+                <IconButton
+                  className="text-red-500"
+                  onClick={() => handleDeleteDeck(deck.id)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </div>
+              <IconButton onClick={() => navigate(`/mydecks/${deck.id}`)}>
+                <VisibilityIcon />
+              </IconButton>
             </div>
-            <div>
-              <button
-                className="bg-yellow-500 text-white px-2 py-1 rounded mr-2"
-                onClick={() => {
-                  setEditingDeck(deck);
-                  setDeckTitle(deck.title);
-                  setDeckDescription(deck.description);
-                  setShowModal(true);
-                }}
-              >
-                Edit
-              </button>
-              <button
-                className="bg-red-500 text-white px-2 py-1 rounded"
-                onClick={() => handleDeleteDeck(deck.id)}
-              >
-                Delete
-              </button>
-            </div>
-          </li>
+          </Card>
         ))}
-      </ul>
+      </div>
+
       {showModal && (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
           <div className="bg-black p-4 rounded-lg w-96">
