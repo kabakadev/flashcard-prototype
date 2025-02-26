@@ -145,6 +145,7 @@ export default function Homepage() {
               component={motion.button}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
+              onClick={() => navigate("/login")}
             >
               Get Started
             </Button>
@@ -209,6 +210,7 @@ export default function Homepage() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     endIcon={<ArrowRight />}
+                    onClick={() => navigate("/signup")}
                   >
                     Start learning for free
                   </Button>
@@ -478,6 +480,7 @@ export default function Homepage() {
                   component={motion.button}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
+                  onClick={() => navigate("/signup")}
                 >
                   Start your learning journey
                 </Button>

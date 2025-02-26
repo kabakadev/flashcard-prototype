@@ -1,35 +1,22 @@
-"use client";
+"use client"
 
-import { useNavigate, Link as RouterLink } from "react-router-dom";
-import { useUser } from "../context/UserContext";
-import { Formik, Form } from "formik";
-import * as Yup from "yup";
-import {
-  Container,
-  Card,
-  CardContent,
-  Typography,
-  TextField,
-  Button,
-  Link,
-  Box,
-  Alert,
-} from "@mui/material";
-import { motion } from "framer-motion";
-import ThemeToggle from "../ThemeComponents/ThemeToggle";
+import { useNavigate, Link as RouterLink } from "react-router-dom"
+import { useUser } from "../context/UserContext"
+import { Formik, Form } from "formik"
+import * as Yup from "yup"
+import { Container, Card, CardContent, Typography, TextField, Button, Link, Box, Alert } from "@mui/material"
+import { motion } from "framer-motion"
+import ThemeToggle from "../ThemeComponents/ThemeToggle"
 
 const validationSchema = Yup.object({
-  email: Yup.string()
-    .email("Invalid email address")
-    .required("Email is required"),
-  password: Yup.string()
-    .min(6, "Password must be at least 6 characters")
-    .required("Password is required"),
-});
+  email: Yup.string().email("Invalid email address").required("Email is required"),
+  username: Yup.string().min(3, "Username must be at least 3 characters").required("Username is required"),
+  password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+})
 
-const Login = () => {
-  const { login } = useUser();
-  const navigate = useNavigate();
+const Signup = () => {
+  const { signup } = useUser()
+  const navigate = useNavigate()
 
   return (
     <Container
@@ -47,11 +34,7 @@ const Login = () => {
         <ThemeToggle />
       </Box>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
         <Card
           sx={{
             bgcolor: "background.paper",
@@ -73,7 +56,7 @@ const Login = () => {
                   mb: 1,
                 }}
               >
-                Welcome Back
+                Create Account
               </Typography>
               <Typography
                 variant="body1"
@@ -81,33 +64,26 @@ const Login = () => {
                   color: "text.secondary",
                 }}
               >
-                Sign in to continue learning
+                Join Flashlearn and start your learning journey
               </Typography>
             </Box>
 
             <Formik
-              initialValues={{ email: "", password: "" }}
+              initialValues={{ email: "", username: "", password: "" }}
               validationSchema={validationSchema}
               onSubmit={async (values, { setSubmitting, setErrors }) => {
                 try {
-                  const success = await login(values.email, values.password);
+                  const success = await signup(values.email, values.username, values.password)
                   if (success) {
-                    navigate("/dashboard");
+                    navigate("/dashboard")
                   }
                 } catch (error) {
-                  setErrors({ general: error.message || "Login failed" });
+                  setErrors({ general: error.message || "Signup failed" })
                 }
-                setSubmitting(false);
+                setSubmitting(false)
               }}
             >
-              {({
-                isSubmitting,
-                errors,
-                touched,
-                handleChange,
-                handleBlur,
-                values,
-              }) => (
+              {({ isSubmitting, errors, touched, handleChange, handleBlur, values }) => (
                 <Form>
                   {errors.general && (
                     <Alert severity="error" sx={{ mb: 2 }}>
@@ -125,6 +101,19 @@ const Login = () => {
                     onBlur={handleBlur}
                     error={touched.email && Boolean(errors.email)}
                     helperText={touched.email && errors.email}
+                    sx={{ mb: 2 }}
+                  />
+
+                  <TextField
+                    fullWidth
+                    id="username"
+                    name="username"
+                    label="Username"
+                    value={values.username}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.username && Boolean(errors.username)}
+                    helperText={touched.username && errors.username}
                     sx={{ mb: 2 }}
                   />
 
@@ -152,41 +141,31 @@ const Login = () => {
                     type="submit"
                     disabled={isSubmitting}
                     sx={{
-                      bgcolor: (theme) =>
-                        theme.palette.mode === "dark" ? "#3b82f6" : "#ffd4f7",
-                      color: (theme) =>
-                        theme.palette.mode === "dark"
-                          ? "white"
-                          : "text.primary",
+                      bgcolor: (theme) => (theme.palette.mode === "dark" ? "#3b82f6" : "#ffd4f7"),
+                      color: (theme) => (theme.palette.mode === "dark" ? "white" : "text.primary"),
                       "&:hover": {
-                        bgcolor: (theme) =>
-                          theme.palette.mode === "dark" ? "#2563eb" : "#ffc4e7",
+                        bgcolor: (theme) => (theme.palette.mode === "dark" ? "#2563eb" : "#ffc4e7"),
                       },
                       mb: 2,
                     }}
                   >
-                    {isSubmitting ? "Signing in..." : "Sign in"}
+                    {isSubmitting ? "Creating account..." : "Create account"}
                   </Button>
 
-                  <Typography
-                    variant="body2"
-                    align="center"
-                    sx={{ color: "text.secondary" }}
-                  >
-                    Don't have an account?{" "}
+                  <Typography variant="body2" align="center" sx={{ color: "text.secondary" }}>
+                    Already have an account?{" "}
                     <Link
                       component={RouterLink}
-                      to="/signup"
+                      to="/login"
                       sx={{
-                        color: (theme) =>
-                          theme.palette.mode === "dark" ? "#3b82f6" : "#ff01f0",
+                        color: (theme) => (theme.palette.mode === "dark" ? "#3b82f6" : "#ff01f0"),
                         textDecoration: "none",
                         "&:hover": {
                           textDecoration: "underline",
                         },
                       }}
                     >
-                      Sign up here
+                      Sign in here
                     </Link>
                   </Typography>
                 </Form>
@@ -196,7 +175,8 @@ const Login = () => {
         </Card>
       </motion.div>
     </Container>
-  );
-};
+  )
+}
 
-export default Login;
+export default Signup
+
