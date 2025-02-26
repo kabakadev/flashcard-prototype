@@ -1,55 +1,76 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import PropTypes from "prop-types"
-import { Card, CardContent, Typography, useTheme } from "@mui/material"
+import { motion } from "framer-motion";
+import PropTypes from "prop-types";
+import { Card, CardContent, Typography, useTheme, Box } from "@mui/material";
 
 export default function FeatureCard({ Icon, title, description }) {
-  const theme = useTheme()
-  const isDarkMode = theme.palette.mode === "dark"
+  const theme = useTheme();
+  const isDarkMode = theme.palette.mode === "dark";
+
+  // Custom icon background colors based on theme
+  const iconBgColor = isDarkMode
+    ? "rgba(124, 58, 237, 0.15)" // Subtle purple in dark mode
+    : "rgba(124, 58, 237, 0.08)"; // Very light purple in light mode
+
+  const iconColor = theme.palette.primary.main;
 
   return (
-    <motion.div whileHover={{ scale: 1.02 }}>
+    <motion.div
+      whileHover={{ scale: 1.02, y: -5 }}
+      transition={{ duration: 0.2 }}
+    >
       <Card
         sx={{
           bgcolor: "background.paper",
+          height: "100%",
           transition: "all 0.3s ease",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
           "&:hover": {
-            boxShadow: (theme) =>
-              theme.palette.mode === "dark"
-                ? "0 0 0 1px rgba(59, 130, 246, 0.5)"
-                : "0 0 0 1px rgba(152, 245, 225, 0.5)",
+            boxShadow: "0 12px 24px rgba(0,0,0,0.1)",
+            borderColor: isDarkMode ? "primary.main" : "primary.light",
           },
         }}
       >
-        <CardContent sx={{ p: 4, display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
-          <div
-            style={{
-              backgroundColor: isDarkMode ? "#3b82f6" : "#ffffff",
-              padding: "10px",
-              borderRadius: "50%",
+        <CardContent
+          sx={{
+            p: 4,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
+          <Box
+            sx={{
+              backgroundColor: iconBgColor,
+              padding: "12px",
+              borderRadius: "12px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              width: "40px",
-              height: "40px",
-              boxShadow: isDarkMode ? "none" : "0 2px 4px rgba(0,0,0,0.1)",
+              width: "48px",
+              height: "48px",
+              mb: 2,
+              boxShadow: isDarkMode
+                ? "none"
+                : "0 4px 8px rgba(124, 58, 237, 0.1)",
             }}
           >
             <Icon
-              className="w-5 h-5"
               style={{
-                color: isDarkMode ? "#ffffff" : "#000000",
+                color: iconColor,
                 strokeWidth: 2.5,
               }}
             />
-          </div>
+          </Box>
           <Typography
             variant="h6"
             sx={{
               color: "text.primary",
               fontWeight: 600,
               textAlign: "center",
+              mb: 1,
             }}
           >
             {title}
@@ -67,12 +88,11 @@ export default function FeatureCard({ Icon, title, description }) {
         </CardContent>
       </Card>
     </motion.div>
-  )
+  );
 }
 
 FeatureCard.propTypes = {
   Icon: PropTypes.elementType.isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
-}
-
+};

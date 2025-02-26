@@ -1,12 +1,17 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import PropTypes from "prop-types"
-import { Box, CircularProgress as MUICircularProgress, Typography, useTheme } from "@mui/material"
+import { motion } from "framer-motion";
+import PropTypes from "prop-types";
+import {
+  Box,
+  CircularProgress as MUICircularProgress,
+  Typography,
+  useTheme,
+} from "@mui/material";
 
 export function CircularProgress({ percentage, label, size = 120 }) {
-  const theme = useTheme()
-  const isDarkMode = theme.palette.mode === "dark"
+  const theme = useTheme();
+  const isDarkMode = theme.palette.mode === "dark";
 
   return (
     <Box
@@ -18,7 +23,14 @@ export function CircularProgress({ percentage, label, size = 120 }) {
         width: "100%",
       }}
     >
-      <Box sx={{ position: "relative", display: "inline-flex", width: size, height: size }}>
+      <Box
+        sx={{
+          position: "relative",
+          display: "inline-flex",
+          width: size,
+          height: size,
+        }}
+      >
         {/* Background circle */}
         <MUICircularProgress
           variant="determinate"
@@ -26,7 +38,10 @@ export function CircularProgress({ percentage, label, size = 120 }) {
           size={size}
           thickness={3.2}
           sx={{
-            color: (theme) => (theme.palette.mode === "dark" ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"),
+            color: (theme) =>
+              theme.palette.mode === "dark"
+                ? "rgba(255,255,255,0.1)"
+                : "rgba(0,0,0,0.1)",
           }}
         />
         {/* Progress circle */}
@@ -38,7 +53,7 @@ export function CircularProgress({ percentage, label, size = 120 }) {
           sx={{
             position: "absolute",
             left: 0,
-            color: isDarkMode ? "#3b82f6" : "#ffd4f7",
+            color: theme.palette.primary.main,
             circle: {
               strokeLinecap: "round",
             },
@@ -57,7 +72,11 @@ export function CircularProgress({ percentage, label, size = 120 }) {
             justifyContent: "center",
           }}
         >
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
             <Typography
               variant="h4"
               component="div"
@@ -89,12 +108,11 @@ export function CircularProgress({ percentage, label, size = 120 }) {
         </Typography>
       </motion.div>
     </Box>
-  )
+  );
 }
 
 CircularProgress.propTypes = {
   percentage: PropTypes.number.isRequired,
   label: PropTypes.string.isRequired,
   size: PropTypes.number,
-}
-
+};

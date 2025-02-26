@@ -1,17 +1,23 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { motion } from "framer-motion"
-import PropTypes from "prop-types"
-import { Card, CardContent, Button, Typography } from "@mui/material"
+import { useState } from "react";
+import { motion } from "framer-motion";
+import PropTypes from "prop-types";
+import { Card, CardContent, Button, Typography, Box } from "@mui/material";
 
 export default function FlashCard({ question, answer }) {
-  const [isFlipped, setIsFlipped] = useState(false)
+  const [isFlipped, setIsFlipped] = useState(false);
 
   return (
-    <div className="relative w-[282px] h-[248px] [perspective:1000px]">
+    <Box sx={{ width: 300, height: 250, perspective: "1000px" }}>
       <motion.div
-        className="w-full h-full relative [transform-style:preserve-3d] cursor-pointer"
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "relative",
+          transformStyle: "preserve-3d",
+          cursor: "pointer",
+        }}
         animate={{ rotateY: isFlipped ? 180 : 0 }}
         transition={{ duration: 0.6, ease: "easeInOut" }}
         whileHover={{ scale: 1.02 }}
@@ -23,13 +29,14 @@ export default function FlashCard({ question, answer }) {
             width: "100%",
             height: "100%",
             backfaceVisibility: "hidden",
-            bgcolor: (theme) =>
-              theme.palette.mode === "dark" ? theme.palette.background.paper : theme.palette.background.paper,
-            color: (theme) => theme.palette.text.primary,
+            bgcolor: "background.paper",
+            color: "text.primary",
             transition: (theme) =>
               theme.transitions.create(["background-color", "color"], {
                 duration: theme.transitions.duration.standard,
               }),
+            boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+            borderRadius: "16px",
           }}
         >
           <CardContent
@@ -41,47 +48,50 @@ export default function FlashCard({ question, answer }) {
               justifyContent: "space-between",
             }}
           >
-            <div>
-              <Typography variant="h6" sx={{ mb: 2 }}>
+            <Box>
+              <Typography
+                variant="subtitle1"
+                sx={{ mb: 2, color: "primary.main", fontWeight: "bold" }}
+              >
                 Question:
               </Typography>
-              <Typography variant="body1" sx={{ minHeight: "100px" }}>
+              <Typography
+                variant="body1"
+                sx={{ minHeight: "100px", color: "text.primary" }}
+              >
                 {question}
               </Typography>
-            </div>
-            <div className="flex gap-[19px]">
+            </Box>
+            <Box sx={{ display: "flex", gap: 2 }}>
               <Button
                 variant="contained"
                 fullWidth
                 onClick={() => setIsFlipped(true)}
                 sx={{
-                  bgcolor: (theme) =>
-                    theme.palette.mode === "dark" ? theme.palette.primary.main : theme.palette.primary.main,
-                  color: (theme) => theme.palette.primary.contrastText,
+                  bgcolor: "primary.main",
+                  color: "primary.contrastText",
                   "&:hover": {
-                    bgcolor: (theme) =>
-                      theme.palette.mode === "dark" ? theme.palette.primary.dark : theme.palette.primary.light,
+                    bgcolor: "primary.dark",
                   },
                 }}
               >
                 Flip
               </Button>
               <Button
-                variant="contained"
+                variant="outlined"
                 fullWidth
                 sx={{
-                  bgcolor: (theme) =>
-                    theme.palette.mode === "dark" ? theme.palette.primary.main : theme.palette.primary.main,
-                  color: (theme) => theme.palette.primary.contrastText,
+                  borderColor: "primary.main",
+                  color: "primary.main",
                   "&:hover": {
-                    bgcolor: (theme) =>
-                      theme.palette.mode === "dark" ? theme.palette.primary.dark : theme.palette.primary.light,
+                    borderColor: "primary.dark",
+                    bgcolor: "rgba(67, 97, 238, 0.04)",
                   },
                 }}
               >
                 Next
               </Button>
-            </div>
+            </Box>
           </CardContent>
         </Card>
 
@@ -93,13 +103,14 @@ export default function FlashCard({ question, answer }) {
             height: "100%",
             backfaceVisibility: "hidden",
             transform: "rotateY(180deg)",
-            bgcolor: (theme) =>
-              theme.palette.mode === "dark" ? theme.palette.background.paper : theme.palette.background.paper,
-            color: (theme) => theme.palette.text.primary,
+            bgcolor: "background.paper",
+            color: "text.primary",
             transition: (theme) =>
               theme.transitions.create(["background-color", "color"], {
                 duration: theme.transitions.duration.standard,
               }),
+            boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+            borderRadius: "16px",
           }}
         >
           <CardContent
@@ -111,56 +122,58 @@ export default function FlashCard({ question, answer }) {
               justifyContent: "space-between",
             }}
           >
-            <div>
-              <Typography variant="h6" sx={{ mb: 2 }}>
+            <Box>
+              <Typography
+                variant="subtitle1"
+                sx={{ mb: 2, color: "primary.main", fontWeight: "bold" }}
+              >
                 Answer:
               </Typography>
-              <Typography variant="body1" sx={{ minHeight: "100px" }}>
+              <Typography
+                variant="body1"
+                sx={{ minHeight: "100px", color: "text.primary" }}
+              >
                 {answer}
               </Typography>
-            </div>
-            <div className="flex gap-[19px]">
+            </Box>
+            <Box sx={{ display: "flex", gap: 2 }}>
               <Button
                 variant="contained"
                 fullWidth
                 onClick={() => setIsFlipped(false)}
                 sx={{
-                  bgcolor: (theme) =>
-                    theme.palette.mode === "dark" ? theme.palette.primary.main : theme.palette.primary.main,
-                  color: (theme) => theme.palette.primary.contrastText,
+                  bgcolor: "primary.main",
+                  color: "primary.contrastText",
                   "&:hover": {
-                    bgcolor: (theme) =>
-                      theme.palette.mode === "dark" ? theme.palette.primary.dark : theme.palette.primary.light,
+                    bgcolor: "primary.dark",
                   },
                 }}
               >
                 Flip
               </Button>
               <Button
-                variant="contained"
+                variant="outlined"
                 fullWidth
                 sx={{
-                  bgcolor: (theme) =>
-                    theme.palette.mode === "dark" ? theme.palette.primary.main : theme.palette.primary.main,
-                  color: (theme) => theme.palette.primary.contrastText,
+                  borderColor: "primary.main",
+                  color: "primary.main",
                   "&:hover": {
-                    bgcolor: (theme) =>
-                      theme.palette.mode === "dark" ? theme.palette.primary.dark : theme.palette.primary.light,
+                    borderColor: "primary.dark",
+                    bgcolor: "rgba(67, 97, 238, 0.04)",
                   },
                 }}
               >
                 Next
               </Button>
-            </div>
+            </Box>
           </CardContent>
         </Card>
       </motion.div>
-    </div>
-  )
+    </Box>
+  );
 }
 
 FlashCard.propTypes = {
   question: PropTypes.string.isRequired,
   answer: PropTypes.string.isRequired,
-}
-
+};

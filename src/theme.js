@@ -1,52 +1,66 @@
-import { createTheme } from "@mui/material/styles"
+import { createTheme } from "@mui/material/styles";
 
-// Light theme colors remain the same
+// Updated light theme colors with more personality
 const lightPalette = {
   mode: "light",
   primary: {
-    main: "#ffd4f7",
-    contrastText: "#1a1b1e",
+    main: "#7c3aed", // Vibrant purple
+    light: "#9d68f2",
+    dark: "#6025c0",
+    contrastText: "#ffffff",
   },
   secondary: {
-    main: "#98f5e1",
-    contrastText: "#1a1b1e",
+    main: "#10b981", // Emerald green
+    light: "#34d399",
+    dark: "#059669",
+    contrastText: "#ffffff",
   },
   background: {
-    default: "#FBF8CC",
-    paper: "#98f5e1",
-    nav: "#b4d4ff",
+    default: "#f8fafc", // Soft background
+    paper: "#ffffff", // Clean white for cards
+    nav: "#f1f5f9", // Light gray for nav
   },
   text: {
-    primary: "#1a1b1e",
-    secondary: "#4a4b4d",
+    primary: "#1e293b", // Slate-900
+    secondary: "#64748b", // Slate-500
   },
-}
+  accent: {
+    light: "#f1f5f9", // Slate-100
+    medium: "#e2e8f0", // Slate-200
+    highlight: "#7c3aed", // Purple highlight
+  },
+};
 
-// Updated dark theme colors
+// Updated dark theme colors with more personality
 const darkPalette = {
   mode: "dark",
   primary: {
-    main: "#3b82f6", // Vibrant blue
-    light: "#60a5fa",
-    dark: "#2563eb",
+    main: "#7c3aed", // Vibrant purple (matching light mode)
+    light: "#9d68f2",
+    dark: "#6025c0",
     contrastText: "#ffffff",
   },
   secondary: {
-    main: "#1f2937", // Rich dark blue-gray
-    light: "#374151",
-    dark: "#111827",
+    main: "#10b981", // Emerald green
+    light: "#34d399",
+    dark: "#059669",
     contrastText: "#ffffff",
   },
   background: {
-    default: "#111827", // Darker background
-    paper: "#1f2937", // Card background
-    nav: "#1f2937",
+    default: "#0f172a", // Dark blue-gray background
+    paper: "#1e293b", // Slightly lighter for cards
+    nav: "#1e293b", // Dark nav background
   },
   text: {
-    primary: "#ffffff",
-    secondary: "#9ca3af",
+    primary: "#f8fafc",
+    secondary: "#cbd5e1",
   },
-}
+  accent: {
+    light: "#334155", // Slate-700
+    medium: "#475569", // Slate-600
+    highlight: "#7c3aed", // Purple highlight
+  },
+};
 
 // Common theme settings
 const commonSettings = {
@@ -56,6 +70,7 @@ const commonSettings = {
         root: {
           borderRadius: "16px",
           backgroundImage: "none",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
         },
       },
     },
@@ -63,11 +78,12 @@ const commonSettings = {
       styleOverrides: {
         root: {
           textTransform: "none",
-          borderRadius: "30px",
+          borderRadius: "8px",
+          fontWeight: 600,
         },
         containedPrimary: {
           "&:hover": {
-            backgroundColor: "#2563eb",
+            backgroundColor: "#6025c0",
           },
         },
       },
@@ -76,14 +92,15 @@ const commonSettings = {
       styleOverrides: {
         root: {
           "&:hover": {
-            backgroundColor: "rgba(59, 130, 246, 0.1)",
+            backgroundColor: "rgba(124, 58, 237, 0.1)",
           },
         },
       },
     },
   },
   typography: {
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+    fontFamily:
+      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
     h1: { fontWeight: 700 },
     h2: { fontWeight: 700 },
     h3: { fontWeight: 700 },
@@ -91,15 +108,14 @@ const commonSettings = {
     h5: { fontWeight: 600 },
     h6: { fontWeight: 600 },
   },
-}
+};
 
 export const theme = createTheme({
   ...commonSettings,
   palette: lightPalette,
-})
+});
 
 export const darkTheme = createTheme({
   ...commonSettings,
   palette: darkPalette,
-})
-
+});
