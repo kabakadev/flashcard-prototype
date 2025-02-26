@@ -7,7 +7,11 @@ import {
   Button,
   Box,
   LinearProgress,
+  IconButton,
+  CircularProgress,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import NavBar from "./NavBar";
 
 const API_URL = "http://localhost:5000";
 
@@ -17,13 +21,9 @@ const StudyMode = () => {
   const [flashcards, setFlashcards] = useState([]);
   const [currentFlashcardIndex, setCurrentFlashcardIndex] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
-  const [studyProgress, setStudyProgress] = useState([]);
-  const [masteryLevel, setMasteryLevel] = useState(0);
-  const [cardsMastered, setCardsMastered] = useState(0);
-  const [retentionRate, setRetentionRate] = useState(0);
-  const [focusScore, setFocusScore] = useState(0);
-  const [minutesStudied, setMinutesStudied] = useState(0);
+  const [loading, setLoading] = useState(true);
 
+  // Fetch flashcards for the selected deck
   useEffect(() => {
     const fetchFlashcards = async () => {
       try {
@@ -42,6 +42,8 @@ const StudyMode = () => {
         }
       } catch (error) {
         console.error("Error fetching flashcards:", error);
+      } finally {
+        setLoading(false); // Set loading to false after fetching
       }
     };
 
@@ -69,16 +71,6 @@ const StudyMode = () => {
       });
 
       if (response.ok) {
-        const progressData = await response.json();
-        setStudyProgress([...studyProgress, progressData]);
-
-        // Update metrics
-        setMasteryLevel(progressData.mastery_level || 0);
-        setCardsMastered(progressData.cards_mastered || 0);
-        setRetentionRate(progressData.retention_rate || 0);
-        setFocusScore(progressData.focus_score || 0);
-        setMinutesStudied((prev) => prev + timeSpent);
-
         // Move to the next flashcard
         if (currentFlashcardIndex < flashcards.length - 1) {
           setCurrentFlashcardIndex(currentFlashcardIndex + 1);
@@ -96,69 +88,119 @@ const StudyMode = () => {
     }
   };
 
-  if (flashcards.length === 0) return <Typography>Loading...</Typography>;
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress /> {/* Show loading spinner */}
+      </Box>
+    );
+  }
+
+  if (flashcards.length === 0) {
+    return (
+      <Box sx={{ p: 4 }}>
+        <NavBar />
+        <Typography variant="body1" color="textSecondary">
+          No flashcards found for this deck.
+        </Typography>
+      </Box>
+    );
+  }
+
+  // Calculate progress percentage
+  const progress = ((currentFlashcardIndex + 1) / flashcards.length) * 100;
 
   return (
-    <Box sx={{ p: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        Study Mode
-      </Typography>
+    <div>
+      <NavBar /> {/* Add NavBar */}
+      <Box sx={{ p: 4, position: "relative" }}>
+        {/* Close Button */}
+        <IconButton
+          sx={{
+            position: "absolute",
+            top: 16,
+            right: 16,
+            zIndex: 1,
+            backgroundColor: "red", // Red background
+            color: "white", // White icon
+            "&:hover": {
+              backgroundColor: "darkred", // Darker red on hover
+            },
+          }}
+          onClick={() => navigate("/study")} // Navigate back to /study
+        >
+          <CloseIcon />
+        </IconButton>
 
-      {/* Metrics Section */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h6">Metrics</Typography>
-        <Typography>Mastery Level: {masteryLevel}</Typography>
-        <Typography>Cards Mastered: {cardsMastered}</Typography>
-        <Typography>Retention Rate: {retentionRate}%</Typography>
-        <Typography>Focus Score: {focusScore}%</Typography>
-        <Typography>Minutes Studied Today: {minutesStudied}</Typography>
-      </Box>
-
-      {/* Flashcard Section */}
-      <Card>
-        <CardContent>
-          <Typography variant="h5" gutterBottom>
-            {flashcards[currentFlashcardIndex].front_text}
+        {/* Progress Bar */}
+        <Box sx={{ mb: 4 }}>
+          <LinearProgress
+            variant="determinate"
+            value={progress}
+            sx={{ height: 10, borderRadius: 5 }}
+          />
+          <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
+            {currentFlashcardIndex + 1} of {flashcards.length} flashcards
           </Typography>
-          {showAnswer && (
-            <Typography variant="body1" color="textSecondary">
-              {flashcards[currentFlashcardIndex].back_text}
-            </Typography>
-          )}
-        </CardContent>
-      </Card>
+        </Box>
 
-      {/* Buttons */}
-      <Box sx={{ mt: 2 }}>
-        {!showAnswer ? (
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => setShowAnswer(true)}
-          >
-            Show Answer
-          </Button>
-        ) : (
-          <>
+        <Typography variant="h4" gutterBottom>
+          Study Mode
+        </Typography>
+
+        {/* Flashcard Section */}
+        <Card>
+          <CardContent>
+            <Typography variant="h5" gutterBottom>
+              {flashcards[currentFlashcardIndex].front_text}
+            </Typography>
+            {showAnswer && (
+              <Typography variant="body1" color="textSecondary">
+                {flashcards[currentFlashcardIndex].back_text}
+              </Typography>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Buttons */}
+        <Box sx={{ mt: 2 }}>
+          {!showAnswer ? (
             <Button
               variant="contained"
-              color="success"
-              onClick={() => handleFlashcardResponse(true)}
-              sx={{ mr: 2 }}
+              color="primary"
+              onClick={() => setShowAnswer(true)}
             >
-              Correct
+              Show Answer
             </Button>
-            <Button
-              variant="contained"
-              color="error"
-              onClick={() => handleFlashcardResponse(false)}
-            >
-              Incorrect
-            </Button>
-          </>
-        )}
+          ) : (
+            <>
+              <Button
+                variant="contained"
+                color="success"
+                onClick={() => handleFlashcardResponse(true)}
+                sx={{ mr: 2 }}
+              >
+                Correct
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => handleFlashcardResponse(false)}
+              >
+                Incorrect
+              </Button>
+            </>
+          )}
+        </Box>
       </Box>
-    </Box>
+    </div>
   );
 };
 

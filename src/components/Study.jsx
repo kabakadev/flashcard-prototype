@@ -11,25 +11,27 @@ import {
   Button,
   Modal,
   TextField,
+  CircularProgress,
 } from "@mui/material";
 import NavBar from "./NavBar";
 
 const API_URL = "http://localhost:5000";
 
 const Study = () => {
-  const { user, isAuthenticated, loading } = useUser();
+  const { user, isAuthenticated, loading: userLoading } = useUser();
   const navigate = useNavigate();
-  const [decks, setDecks] = useState([]);
+  const [decks, setDecks] = useState([]); // Default to an empty array
   const [studyProgress, setStudyProgress] = useState([]);
   const [weeklyGoal, setWeeklyGoal] = useState(10);
   const [modalOpen, setModalOpen] = useState(false);
   const [newWeeklyGoal, setNewWeeklyGoal] = useState(weeklyGoal);
+  const [loading, setLoading] = useState(true); // Add loading state for decks
 
   useEffect(() => {
-    if (!loading && !isAuthenticated) {
+    if (!userLoading && !isAuthenticated) {
       navigate("/login");
     }
-  }, [loading, isAuthenticated, navigate]);
+  }, [userLoading, isAuthenticated, navigate]);
 
   useEffect(() => {
     const fetchDecks = async () => {
@@ -41,12 +43,24 @@ const Study = () => {
 
         if (response.ok) {
           const data = await response.json();
-          setDecks(data);
+          console.log("API Response:", data); // Debugging: Log the API response
+
+          // Ensure the response is an array
+          if (Array.isArray(data)) {
+            setDecks(data);
+          } else {
+            console.error("API response is not an array:", data);
+            setDecks([]); // Set decks to an empty array if the response is invalid
+          }
         } else {
           console.error("Failed to fetch decks");
+          setDecks([]); // Set decks to an empty array if the request fails
         }
       } catch (error) {
         console.error("Error fetching decks:", error);
+        setDecks([]); // Set decks to an empty array if there's an error
+      } finally {
+        setLoading(false); // Set loading to false after fetching
       }
     };
 
@@ -77,7 +91,20 @@ const Study = () => {
     }
   };
 
-  if (loading) return <Typography>Loading...</Typography>;
+  if (userLoading || loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress /> {/* Show loading spinner */}
+      </Box>
+    );
+  }
 
   return (
     <div>
@@ -108,27 +135,42 @@ const Study = () => {
         </Box>
 
         {/* Deck Selection Section */}
-        <Box sx={{ mb: 4 }}>
-          <Typography variant="h6" gutterBottom>
-            Choose a Deck to Study
-          </Typography>
-          <Grid container spacing={3}>
-            {decks.map((deck) => (
-              <Grid item xs={12} sm={6} md={4} key={deck.id}>
-                <Card onClick={() => navigate(`/study/${deck.id}`)}>
-                  <CardContent>
-                    <Typography variant="h6" gutterBottom>
-                      {deck.title}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      {deck.description}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
+        {decks.length === 0 ? (
+          <Box sx={{ textAlign: "center" }}>
+            <Typography variant="body1" color="textSecondary" gutterBottom>
+              No decks found. Create a new deck to get started!
+            </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => navigate("/mydecks")} // Navigate to /mydecks
+            >
+              Create New Deck
+            </Button>
+          </Box>
+        ) : (
+          <Box sx={{ mb: 4 }}>
+            <Typography variant="h6" gutterBottom>
+              Choose a Deck to Study
+            </Typography>
+            <Grid container spacing={3}>
+              {decks.map((deck) => (
+                <Grid item xs={12} sm={6} md={4} key={deck.id}>
+                  <Card onClick={() => navigate(`/study/${deck.id}`)}>
+                    <CardContent>
+                      <Typography variant="h6" gutterBottom>
+                        {deck.title}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {deck.description}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+        )}
 
         {/* Update Weekly Goal Modal */}
         <Modal open={modalOpen} onClose={() => setModalOpen(false)}>

@@ -57,6 +57,10 @@ const Dashboard = () => {
 
   if (loading || !dashboardData) return <Typography>Loading...</Typography>;
 
+  // Format mastery_level and retention_rate as whole integers
+  const masteryLevel = Math.round(dashboardData.mastery_level);
+  const retentionRate = Math.round(dashboardData.retention_rate);
+
   return (
     <div>
       <NavBar />
@@ -119,17 +123,15 @@ const Dashboard = () => {
                 </Typography>
                 <Divider sx={{ mb: 2 }} />
                 <Typography variant="body1">
-                  Mastery Level: {dashboardData.mastery_level}
+                  Mastery Level: {masteryLevel}%
                 </Typography>
                 <Typography variant="body1">
                   Cards Mastered: {dashboardData.cards_mastered}
                 </Typography>
                 <Typography variant="body1">
-                  Retention Rate: {dashboardData.retention_rate}%
+                  Retention Rate: {retentionRate}%
                 </Typography>
-                <Typography variant="body1">
-                  Focus Score: {dashboardData.focus_score}%
-                </Typography>
+                {/* Focus Score removed entirely */}
               </CardContent>
             </Card>
           </Grid>
@@ -142,9 +144,7 @@ const Dashboard = () => {
                   Study Habits
                 </Typography>
                 <Divider sx={{ mb: 2 }} />
-                <Typography variant="body1">
-                  Minutes Studied per Day: {dashboardData.minutes_per_day} mins
-                </Typography>
+
                 <Typography variant="body1">
                   Most Reviewed Deck:{" "}
                   {dashboardData.most_reviewed_deck || "None"}
