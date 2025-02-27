@@ -1,15 +1,74 @@
 const API_URL = "http://localhost:5000";
 
-export const fetchDecks = async (token) => {
-  const response = await fetch(`${API_URL}/decks`, {
+export const fetchDeckAndFlashcards = async (deckId) => {
+  const token = localStorage.getItem("authToken");
+
+  const deckResponse = await fetch(`${API_URL}/decks/${deckId}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
-  if (!response.ok) throw new Error("Failed to fetch decks");
-  const data = await response.json();
-  return Array.isArray(data) ? data : [];
+
+  if (!deckResponse.ok) throw new Error("Failed to fetch deck details");
+  const deckData = await deckResponse.json();
+
+  const cardsResponse = await fetch(`${API_URL}/flashcards`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!cardsResponse.ok) throw new Error("Failed to fetch flashcards");
+  const cardsData = await cardsResponse.json();
+  const flashcardsData = cardsData.filter(
+    (card) => card.deck_id === Number.parseInt(deckId)
+  );
+
+  return { deckData, flashcardsData };
 };
 
-export const createOrUpdateDeck = async (token, deck, isEditing) => {
+export const addFlashcard = async (deckId, newFlashcard) => {
+  const token = localStorage.getItem("authToken");
+  const response = await fetch(`${API_URL}/flashcards`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      deck_id: Number.parseInt(deckId),
+      front_text: newFlashcard.front_text,
+      back_text: newFlashcard.back_text,
+    }),
+  });
+
+  if (!response.ok) throw new Error("Failed to add flashcard");
+  return response.json();
+};
+
+export const updateFlashcard = async (flashcard) => {
+  const token = localStorage.getItem("authToken");
+  const response = await fetch(`${API_URL}/flashcards/${flashcard.id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(flashcard),
+  });
+
+  if (!response.ok) throw new Error("Failed to update flashcard");
+  return response.json();
+};
+
+export const deleteFlashcard = async (flashcardId) => {
+  const token = localStorage.getItem("authToken");
+  const response = await fetch(`${API_URL}/flashcards/${flashcardId}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!response.ok) throw new Error("Failed to delete flashcard");
+};
+
+export const createOrUpdateDeck = async (deck, isEditing) => {
+  const token = localStorage.getItem("authToken");
   const method = isEditing ? "PUT" : "POST";
   const url = isEditing ? `${API_URL}/decks/${deck.id}` : `${API_URL}/decks`;
 
@@ -26,7 +85,20 @@ export const createOrUpdateDeck = async (token, deck, isEditing) => {
   return response.json();
 };
 
-export const deleteDeck = async (token, deckId) => {
+// Add this function if it's not already present
+export const fetchDecks = async () => {
+  const token = localStorage.getItem("authToken");
+  const response = await fetch(`${API_URL}/decks`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!response.ok) throw new Error("Failed to fetch decks");
+  return response.json();
+};
+
+// Add this function if it's not already present
+export const deleteDeck = async (deckId) => {
+  const token = localStorage.getItem("authToken");
   const response = await fetch(`${API_URL}/decks/${deckId}`, {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` },
