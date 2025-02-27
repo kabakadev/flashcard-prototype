@@ -1,12 +1,12 @@
 import { createTheme } from "@mui/material/styles";
 
-// Updated light theme colors with more personality
+// Updated light theme colors with blue instead of purple
 const lightPalette = {
   mode: "light",
   primary: {
-    main: "#7c3aed", // Vibrant purple
-    light: "#9d68f2",
-    dark: "#6025c0",
+    main: "#3b82f6", // Bright blue
+    light: "#60a5fa",
+    dark: "#2563eb",
     contrastText: "#ffffff",
   },
   secondary: {
@@ -27,15 +27,15 @@ const lightPalette = {
   accent: {
     light: "#f1f5f9", // Slate-100
     medium: "#e2e8f0", // Slate-200
-    highlight: "#7c3aed", // Purple highlight
+    highlight: "#3b82f6", // Blue highlight
   },
 };
 
-// Updated dark theme colors with more personality
+// Keep dark theme with purple
 const darkPalette = {
   mode: "dark",
   primary: {
-    main: "#7c3aed", // Vibrant purple (matching light mode)
+    main: "#7c3aed", // Vibrant purple
     light: "#9d68f2",
     dark: "#6025c0",
     contrastText: "#ffffff",
@@ -83,7 +83,8 @@ const commonSettings = {
         },
         containedPrimary: {
           "&:hover": {
-            backgroundColor: "#6025c0",
+            backgroundColor: ({ theme }) =>
+              theme.palette.mode === "dark" ? "#6025c0" : "#2563eb",
           },
         },
       },
@@ -92,7 +93,10 @@ const commonSettings = {
       styleOverrides: {
         root: {
           "&:hover": {
-            backgroundColor: "rgba(124, 58, 237, 0.1)",
+            backgroundColor: ({ theme }) =>
+              theme.palette.mode === "dark"
+                ? "rgba(124, 58, 237, 0.1)"
+                : "rgba(59, 130, 246, 0.1)",
           },
         },
       },

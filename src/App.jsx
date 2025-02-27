@@ -6,7 +6,7 @@ import { theme as lightTheme, darkTheme } from "./theme";
 import Homepage from "./components/HomePage";
 import Login from "./components/Authentication/Login";
 import Signup from "./components/Authentication/SignUp";
-import Dashboard from "./components/Dashboard";
+import Dashboard from "./components/DashBoard";
 import MyDecks from "./components/MyDecks";
 import DeckView from "./components/DeckView";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
