@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "./context/UserContext";
 import { Box, Container, Grid, useTheme, Alert } from "@mui/material";
@@ -10,8 +10,9 @@ import LoadingState from "./Dashboard/LoadingState";
 import EmptyState from "./MyDecks/EmptyState";
 import DeckCard from "./MyDecks/DeckCard";
 import DeckModal from "./MyDecks/DeckModal";
+import FilterSort from "./MyDecks/FilterSort";
 import { fetchDecks, createOrUpdateDeck, deleteDeck } from "../utils/deckApi";
-import Header from "./MyDecks/Header"; // Add this import
+import Header from "./MyDecks/Header";
 
 const MyDecks = () => {
   const { user, isAuthenticated, loading: userLoading } = useUser();
@@ -27,6 +28,15 @@ const MyDecks = () => {
   const [deckDifficulty, setDeckDifficulty] = useState(3);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  // New state for filtering and sorting
+  const [filter, setFilter] = useState({
+    subject: "",
+    category: "",
+    difficulty: "",
+    search: "",
+  });
+  const [sortBy, setSortBy] = useState("title");
 
   useEffect(() => {
     if (!userLoading && !isAuthenticated) {
@@ -126,6 +136,49 @@ const MyDecks = () => {
     navigate(`/study/${deckId}`);
   };
 
+  // Memoized filtered and sorted decks
+  const filteredAndSortedDecks = useMemo(() => {
+    return decks
+      .filter((deck) => {
+        const matchesSubject =
+          !filter.subject || deck.subject === filter.subject;
+        const matchesCategory =
+          !filter.category || deck.category === filter.category;
+        const matchesDifficulty =
+          !filter.difficulty ||
+          deck.difficulty === Number.parseInt(filter.difficulty);
+        const matchesSearch =
+          !filter.search ||
+          deck.title.toLowerCase().includes(filter.search.toLowerCase());
+        return (
+          matchesSubject &&
+          matchesCategory &&
+          matchesDifficulty &&
+          matchesSearch
+        );
+      })
+      .sort((a, b) => {
+        if (sortBy === "title") {
+          return a.title.localeCompare(b.title);
+        } else if (sortBy === "lastStudied") {
+          return new Date(b.last_studied) - new Date(a.last_studied);
+        } else if (sortBy === "difficulty") {
+          return a.difficulty - b.difficulty;
+        }
+        return 0;
+      });
+  }, [decks, filter, sortBy]);
+
+  // Extract unique subjects and categories for filter options
+  const subjects = useMemo(
+    () => [...new Set(decks.map((deck) => deck.subject))],
+    [decks]
+  );
+  const categories = useMemo(
+    () => [...new Set(decks.map((deck) => deck.category))],
+    [decks]
+  );
+
   if (userLoading || loading) {
     return <LoadingState theme={theme} />;
   }
@@ -142,6 +195,15 @@ const MyDecks = () => {
           </Alert>
         )}
 
+        <FilterSort
+          subjects={subjects}
+          categories={categories}
+          filter={filter}
+          setFilter={setFilter}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+        />
+
         <motion.div
           variants={{
             hidden: { opacity: 0 },
@@ -155,11 +217,11 @@ const MyDecks = () => {
           initial="hidden"
           animate="visible"
         >
-          {decks.length === 0 ? (
+          {filteredAndSortedDecks.length === 0 ? (
             <EmptyState theme={theme} onCreateDeck={() => setModalOpen(true)} />
           ) : (
             <Grid container spacing={3}>
-              {decks.map((deck) => (
+              {filteredAndSortedDecks.map((deck) => (
                 <Grid item xs={12} sm={6} md={4} key={deck.id}>
                   <DeckCard
                     deck={deck}

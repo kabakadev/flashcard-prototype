@@ -17,14 +17,7 @@ import {
   ListItemIcon,
   Divider,
 } from "@mui/material";
-import {
-  LogOut,
-  User,
-  Settings,
-  LayoutDashboard,
-  BookOpen,
-  GraduationCap,
-} from "lucide-react";
+import { LogOut, LayoutDashboard, BookOpen, GraduationCap } from "lucide-react";
 import ThemeToggle from "./ThemeComponents/ThemeToggle";
 import { useState } from "react";
 
@@ -156,18 +149,6 @@ const NavBar = () => {
               </Typography>
             </Box>
             <Divider />
-            <MenuItem component={RouterLink} to="/profile">
-              <ListItemIcon>
-                <User size={18} />
-              </ListItemIcon>
-              Profile
-            </MenuItem>
-            <MenuItem component={RouterLink} to="/settings">
-              <ListItemIcon>
-                <Settings size={18} />
-              </ListItemIcon>
-              Settings
-            </MenuItem>
             <Divider />
             <MenuItem onClick={handleLogout} sx={{ color: "error.main" }}>
               <ListItemIcon>
