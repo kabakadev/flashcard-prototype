@@ -10,6 +10,7 @@ import {
   Sparkles,
   ArrowRight,
 } from "lucide-react";
+import { Link as RouterLink } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -119,6 +120,8 @@ export default function Homepage() {
             <ThemeToggle />
             <Button
               variant="outlined"
+              component={RouterLink}
+              to="/login"
               sx={{
                 borderColor: "primary.main",
                 color: "primary.main",
@@ -127,7 +130,6 @@ export default function Homepage() {
                   bgcolor: "rgba(67, 97, 238, 0.04)",
                 },
               }}
-              component={motion.button}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
@@ -135,6 +137,8 @@ export default function Homepage() {
             </Button>
             <Button
               variant="contained"
+              component={RouterLink}
+              to="/signup"
               sx={{
                 bgcolor: "primary.main",
                 color: "primary.contrastText",
@@ -142,10 +146,8 @@ export default function Homepage() {
                   bgcolor: "primary.dark",
                 },
               }}
-              component={motion.button}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => navigate("/login")}
             >
               Get Started
             </Button>
@@ -197,6 +199,8 @@ export default function Homepage() {
                   <Button
                     variant="contained"
                     size="large"
+                    component={RouterLink}
+                    to="/signup"
                     sx={{
                       bgcolor: "primary.main",
                       color: "primary.contrastText",
@@ -206,11 +210,7 @@ export default function Homepage() {
                         bgcolor: "primary.dark",
                       },
                     }}
-                    component={motion.button}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
                     endIcon={<ArrowRight />}
-                    onClick={() => navigate("/signup")}
                   >
                     Start learning for free
                   </Button>
@@ -227,9 +227,6 @@ export default function Homepage() {
                         bgcolor: "rgba(67, 97, 238, 0.04)",
                       },
                     }}
-                    component={motion.button}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
                   >
                     How it works
                   </Button>
@@ -354,26 +351,7 @@ export default function Homepage() {
             ))}
           </Box>
 
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
-            <Button
-              variant="contained"
-              size="large"
-              sx={{
-                bgcolor: "primary.main",
-                color: "primary.contrastText",
-                px: 4,
-                py: 1.5,
-                "&:hover": {
-                  bgcolor: "primary.dark",
-                },
-              }}
-              component={motion.button}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              Create your own flashcards
-            </Button>
-          </Box>
+          {/* "Create your own flashcards" button removed as requested */}
         </Box>
 
         <Divider sx={{ my: 8 }} />
@@ -468,6 +446,8 @@ export default function Homepage() {
                 <Button
                   variant="contained"
                   size="large"
+                  component={RouterLink}
+                  to="/signup"
                   sx={{
                     bgcolor: "primary.main",
                     color: "primary.contrastText",
@@ -477,10 +457,6 @@ export default function Homepage() {
                       bgcolor: "primary.dark",
                     },
                   }}
-                  component={motion.button}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => navigate("/signup")}
                 >
                   Start your learning journey
                 </Button>

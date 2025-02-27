@@ -51,8 +51,8 @@ export const UserProvider = ({ children }) => {
       if (!response.ok) throw new Error("Signup failed");
 
       // Wait for login to complete
-    const success = await login(email, password);
-    return success;
+      const success = await login(email, password);
+      return success;
     } catch (error) {
       console.error("Signup error:", error);
     }
@@ -71,7 +71,7 @@ export const UserProvider = ({ children }) => {
       if (response.ok) {
         localStorage.setItem(TOKEN_KEY, data.token);
         await fetchUser();
-        return true
+        return true;
       } else {
         throw new Error(data.error || "Login failed");
       }
@@ -88,7 +88,9 @@ export const UserProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ user, isAuthenticated, signup, login, logout, loading }}>
+    <UserContext.Provider
+      value={{ user, isAuthenticated, signup, login, logout, loading }}
+    >
       {children}
     </UserContext.Provider>
   );
