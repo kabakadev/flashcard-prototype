@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Box,
   Card,
@@ -9,7 +7,7 @@ import {
   IconButton,
   Button,
 } from "@mui/material";
-import { Pencil, Trash2, PlayCircle } from "lucide-react";
+import { Pencil, Trash2, PlayCircle, Eye } from "lucide-react"; // Import the Eye icon
 import { motion } from "framer-motion";
 
 const DeckCard = ({ deck, theme, onEdit, onDelete, onStudy, navigate }) => (
@@ -22,12 +20,10 @@ const DeckCard = ({ deck, theme, onEdit, onDelete, onStudy, navigate }) => (
         display: "flex",
         flexDirection: "column",
         transition: "all 0.3s ease",
-        cursor: "pointer",
         "&:hover": {
           boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
         },
       }}
-      onClick={() => navigate(`/mydecks/${deck.id}`)}
     >
       <CardContent
         sx={{ p: 0, flexGrow: 1, display: "flex", flexDirection: "column" }}
@@ -141,27 +137,45 @@ const DeckCard = ({ deck, theme, onEdit, onDelete, onStudy, navigate }) => (
             </IconButton>
             <IconButton
               size="small"
-              onClick={(e) => onDelete(e, deck.id)} // Pass the correct deck.id
+              onClick={(e) => onDelete(e, deck.id)}
               sx={{ color: "error.main", "&:hover": { color: "error.dark" } }}
             >
               <Trash2 size={18} />
             </IconButton>
           </Box>
-          <Button
-            variant="contained"
-            startIcon={<PlayCircle size={18} />}
-            onClick={(e) => onStudy(e, deck.id)} // Pass the correct deck.id
-            sx={{
-              bgcolor: "primary.main",
-              color: "primary.contrastText",
-              "&:hover": {
-                bgcolor: "primary.dark",
-              },
-              borderRadius: 2,
-            }}
-          >
-            Study Now
-          </Button>
+          <Box sx={{ display: "flex", gap: 2 }}>
+            <Button
+              variant="outlined"
+              startIcon={<Eye size={18} />} // Add the Eye icon
+              onClick={() => navigate(`/mydecks/${deck.id}`)} // Navigate to deck details
+              sx={{
+                borderColor: "primary.main",
+                color: "primary.main",
+                "&:hover": {
+                  borderColor: "primary.dark",
+                  bgcolor: "rgba(124, 58, 237, 0.04)",
+                },
+                borderRadius: 2,
+              }}
+            >
+              View
+            </Button>
+            <Button
+              variant="contained"
+              startIcon={<PlayCircle size={18} />}
+              onClick={(e) => onStudy(e, deck.id)}
+              sx={{
+                bgcolor: "primary.main",
+                color: "primary.contrastText",
+                "&:hover": {
+                  bgcolor: "primary.dark",
+                },
+                borderRadius: 2,
+              }}
+            >
+              Study Now
+            </Button>
+          </Box>
         </Box>
       </CardContent>
     </Card>
