@@ -60,6 +60,16 @@ const Study = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // Initialize weekly goal from localStorage if available
+  useEffect(() => {
+    const savedWeeklyGoal = localStorage.getItem("weeklyGoal");
+    if (savedWeeklyGoal) {
+      const parsedGoal = Number.parseInt(savedWeeklyGoal, 10);
+      setWeeklyGoal(parsedGoal);
+      setNewWeeklyGoal(parsedGoal);
+    }
+  }, []);
+
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -112,6 +122,19 @@ const Study = () => {
         if (!progressResponse.ok) throw new Error("Failed to fetch progress");
         const progressData = await progressResponse.json();
         setProgress(Array.isArray(progressData) ? progressData : []);
+
+        // Fetch user stats to get the weekly goal
+        const userStatsResponse = await fetch(`${API_URL}/user/stats`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (userStatsResponse.ok) {
+          const userStatsData = await userStatsResponse.json();
+          if (userStatsData.weekly_goal) {
+            setWeeklyGoal(userStatsData.weekly_goal);
+            setNewWeeklyGoal(userStatsData.weekly_goal);
+          }
+        }
 
         // Calculate stats based on progress data
         const totalAttempts = progressData.reduce(
@@ -180,6 +203,8 @@ const Study = () => {
       if (response.ok) {
         const data = await response.json();
         setWeeklyGoal(data.weekly_goal);
+        // Save to localStorage as a fallback
+        localStorage.setItem("weeklyGoal", data.weekly_goal.toString());
         setModalOpen(false);
         setError("");
       } else {

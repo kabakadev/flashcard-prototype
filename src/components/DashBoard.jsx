@@ -20,15 +20,7 @@ const Dashboard = () => {
   const isDarkMode = theme.palette.mode === "dark";
   const [decks, setDecks] = useState([]);
   const [progress, setProgress] = useState([]);
-  const [stats, setStats] = useState({
-    total_flashcards_studied: 0,
-    weekly_goal: 10,
-    study_streak: 0,
-    mastery_level: 0,
-    cards_mastered: 0,
-    retention_rate: 0,
-    average_study_time: 0,
-  });
+  const [stats, setStats] = useState({});
   const API_URL = "http://localhost:5000";
 
   useEffect(() => {
@@ -44,9 +36,10 @@ const Dashboard = () => {
         const token = localStorage.getItem("authToken");
         const decksData = await fetchDecks(token);
         const progressData = await fetchProgress(token);
+        const userStats = await fetchUserStats(token);
         setDecks(decksData);
         setProgress(progressData);
-        calculateStats(progressData);
+        calculateStats(progressData, userStats.weekly_goal);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -54,7 +47,45 @@ const Dashboard = () => {
 
     fetchData();
   }, [user]);
+  const fetchUserStats = async (token) => {
+    try {
+      const response = await fetch(`${API_URL}/dashboard`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
+      if (response.ok) {
+        const data = await response.json();
+        return {
+          weekly_goal: data.weekly_goal,
+          mastery_level: data.mastery_level,
+          study_streak: data.study_streak,
+          focus_score: data.focus_score,
+          retention_rate: data.retention_rate,
+          cards_mastered: data.cards_mastered,
+          minutes_per_day: data.minutes_per_day,
+          accuracy: data.accuracy,
+        };
+      }
+
+      throw new Error("Failed to fetch dashboard data");
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+      // Fallback to localStorage if there's an error
+      const savedWeeklyGoal = localStorage.getItem("weeklyGoal");
+      return {
+        weekly_goal: savedWeeklyGoal
+          ? Number.parseInt(savedWeeklyGoal, 10)
+          : 10,
+        mastery_level: 0,
+        study_streak: 0,
+        focus_score: 0,
+        retention_rate: 0,
+        cards_mastered: 0,
+        minutes_per_day: 0,
+        accuracy: 0,
+      };
+    }
+  };
   const fetchDecks = async (token) => {
     const response = await fetch(`${API_URL}/decks`, {
       headers: { Authorization: `Bearer ${token}` },
