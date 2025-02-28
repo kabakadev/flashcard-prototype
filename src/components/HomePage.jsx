@@ -29,25 +29,6 @@ import FlashCard from "./homepageComponents/FlashCard";
 import ProgressStats from "./homepageComponents/ProgressStats";
 import FeatureCard from "./homepageComponents/FeatureCard";
 
-// Sample data remains the same
-const sampleCards = [
-  {
-    id: 1,
-    question: "What is the capital of France?",
-    answer: "Paris",
-  },
-  {
-    id: 2,
-    question: "What is the chemical symbol of Gold?",
-    answer: "Au",
-  },
-  {
-    id: 3,
-    question: "What is the biggest planet in our Solar system?",
-    answer: "Jupiter",
-  },
-];
-
 const features = [
   {
     Icon: GraduationCap,
@@ -307,52 +288,6 @@ export default function Homepage() {
         </Box>
 
         <Divider sx={{ my: 8 }} />
-
-        {/* Try Flashcards Section */}
-        <Box sx={{ mb: 10 }}>
-          <Typography
-            variant="h3"
-            component="h2"
-            align="center"
-            sx={{
-              mb: 2,
-              fontWeight: "bold",
-              color: "text.primary",
-            }}
-          >
-            Try Our Interactive Flashcards
-          </Typography>
-          <Typography
-            variant="h6"
-            align="center"
-            sx={{
-              mb: 6,
-              color: "text.secondary",
-              maxWidth: "800px",
-              mx: "auto",
-              fontWeight: "normal",
-            }}
-          >
-            Experience how our flashcards work with these sample cards. Click to
-            flip and test your knowledge.
-          </Typography>
-
-          <Box
-            sx={{
-              display: "flex",
-              flexWrap: "wrap",
-              justifyContent: "center",
-              gap: 4,
-              mb: 6,
-            }}
-          >
-            {sampleCards.map((card) => (
-              <FlashCard key={card.id} {...card} />
-            ))}
-          </Box>
-
-          {/* "Create your own flashcards" button removed as requested */}
-        </Box>
 
         <Divider sx={{ my: 8 }} />
 
