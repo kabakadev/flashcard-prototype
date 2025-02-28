@@ -55,6 +55,7 @@ const Dashboard = () => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log(data);
         return {
           weekly_goal: data.weekly_goal,
           mastery_level: data.mastery_level,
@@ -70,20 +71,20 @@ const Dashboard = () => {
       throw new Error("Failed to fetch dashboard data");
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
-      // Fallback to localStorage if there's an error
-      const savedWeeklyGoal = localStorage.getItem("weeklyGoal");
-      return {
-        weekly_goal: savedWeeklyGoal
-          ? Number.parseInt(savedWeeklyGoal, 10)
-          : 10,
-        mastery_level: 0,
-        study_streak: 0,
-        focus_score: 0,
-        retention_rate: 0,
-        cards_mastered: 0,
-        minutes_per_day: 0,
-        accuracy: 0,
-      };
+      // // Fallback to localStorage if there's an error
+      // const savedWeeklyGoal = localStorage.getItem("weeklyGoal");
+      // return {
+      //   weekly_goal: savedWeeklyGoal
+      //     ? Number.parseInt(savedWeeklyGoal, 10)
+      //     : 10,
+      //   mastery_level: 0,
+      //   study_streak: 0,
+      //   focus_score: 0,
+      //   retention_rate: 0,
+      //   cards_mastered: 0,
+      //   minutes_per_day: 0,
+      //   accuracy: 0,
+      // };
     }
   };
   const fetchDecks = async (token) => {
@@ -104,7 +105,7 @@ const Dashboard = () => {
     return Array.isArray(data) ? data : [];
   };
 
-  const calculateStats = (progressData) => {
+  const calculateStats = (progressData, weekly_goal) => {
     const totalAttempts = progressData.reduce(
       (sum, p) => sum + p.study_count,
       0
@@ -127,7 +128,7 @@ const Dashboard = () => {
 
     setStats({
       total_flashcards_studied: cardsStudiedThisWeek,
-      weekly_goal: 10,
+      weekly_goal: weekly_goal, // Use the passed weekly_goal
       study_streak: streak,
       mastery_level:
         totalAttempts > 0

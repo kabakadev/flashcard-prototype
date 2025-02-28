@@ -124,19 +124,30 @@ const Study = () => {
         setProgress(Array.isArray(progressData) ? progressData : []);
 
         // Fetch user stats to get the weekly goal
-        const userStatsResponse = await fetch(`${API_URL}/user/stats`, {
+        const dashboardResponse = await fetch(`${API_URL}/dashboard`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        if (userStatsResponse.ok) {
-          const userStatsData = await userStatsResponse.json();
-          if (userStatsData.weekly_goal) {
-            setWeeklyGoal(userStatsData.weekly_goal);
-            setNewWeeklyGoal(userStatsData.weekly_goal);
+        if (dashboardResponse.ok) {
+          const dashboardData = await dashboardResponse.json();
+          if (dashboardData.weekly_goal) {
+            setWeeklyGoal(dashboardData.weekly_goal);
+            setNewWeeklyGoal(dashboardData.weekly_goal);
           }
+
+          // We can also update other stats directly from the dashboard data
+          setStats({
+            mastery_level: dashboardData.mastery_level || 0,
+            study_streak: dashboardData.study_streak || 0,
+            focus_score: dashboardData.focus_score || 0,
+            retention_rate: dashboardData.retention_rate || 0,
+            cards_mastered: dashboardData.cards_mastered || 0,
+            minutes_per_day: dashboardData.minutes_per_day || 0,
+            accuracy: dashboardData.accuracy || 0,
+          });
         }
 
-        // Calculate stats based on progress data
+        //  Calculate stats based on progress data
         const totalAttempts = progressData.reduce(
           (sum, p) => sum + p.study_count,
           0
