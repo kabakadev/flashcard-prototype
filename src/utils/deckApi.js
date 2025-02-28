@@ -94,17 +94,21 @@ export const createOrUpdateDeck = async (deck, isEditing) => {
   return response.json();
 };
 
-// Add this function if it's not already present
-export const fetchDecks = async () => {
-  const token = localStorage.getItem("authToken");
-  const response = await fetch(`${API_URL}/decks`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const fetchDecks = async (token) => {
+  try {
+    const response = await fetch(`${API_URL}/decks`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-  if (!response.ok) throw new Error("Failed to fetch decks");
-  return response.json();
+    if (!response.ok) throw new Error("Failed to fetch decks");
+
+    const data = await response.json();
+    return Array.isArray(data) ? data : []; // Ensure the response is always an array
+  } catch (error) {
+    console.error("Error fetching decks:", error);
+    return []; // Return an empty array if there's an error
+  }
 };
-
 // Add this function if it's not already present
 export const deleteDeck = async (deckId) => {
   const token = localStorage.getItem("authToken");

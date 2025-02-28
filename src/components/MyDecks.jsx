@@ -50,10 +50,11 @@ const MyDecks = () => {
       try {
         const token = localStorage.getItem("authToken");
         const fetchedDecks = await fetchDecks(token);
-        setDecks(fetchedDecks);
+        setDecks(Array.isArray(fetchedDecks) ? fetchedDecks : []); // Ensure decks is always an array
       } catch (error) {
         console.error("Error fetching decks:", error);
         setError("An error occurred while loading decks.");
+        setDecks([]); // Set decks to an empty array if there's an error
       } finally {
         setLoading(false);
       }
@@ -61,7 +62,6 @@ const MyDecks = () => {
 
     loadDecks();
   }, [user]);
-
   const handleCreateOrUpdateDeck = async () => {
     if (!deckTitle.trim()) {
       setError("Deck title is required");
@@ -133,6 +133,8 @@ const MyDecks = () => {
 
   // Memoized filtered and sorted decks
   const filteredAndSortedDecks = useMemo(() => {
+    if (!Array.isArray(decks)) return []; // Return an empty array if decks is not an array
+
     return decks
       .filter((deck) => {
         const matchesSubject =
