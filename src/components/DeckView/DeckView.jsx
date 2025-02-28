@@ -73,11 +73,11 @@ const DeckView = () => {
     }
   };
 
-  const handleEditFlashcard = async () => {
+  const handleEditFlashcard = async (editedFlashcard) => {
     try {
-      const updatedCard = await updateFlashcard(selectedFlashcard);
-      setFlashcards(
-        flashcards.map((card) =>
+      const updatedCard = await updateFlashcard(editedFlashcard);
+      setFlashcards((prevFlashcards) =>
+        prevFlashcards.map((card) =>
           card.id === updatedCard.id ? updatedCard : card
         )
       );
@@ -120,8 +120,8 @@ const DeckView = () => {
         <FlashcardList
           flashcards={flashcards}
           onEdit={(flashcard) => {
-            setSelectedFlashcard(flashcard);
-            setModalOpen(true);
+            setSelectedFlashcard(flashcard); // Set the selected flashcard
+            setModalOpen(true); // Open the modal
           }}
           onDelete={handleDeleteFlashcard}
           navigate={navigate}
@@ -134,8 +134,8 @@ const DeckView = () => {
             setModalOpen(false);
             setError("");
           }}
-          flashcard={selectedFlashcard}
-          onSave={handleEditFlashcard}
+          flashcard={selectedFlashcard} // Pass the selected flashcard
+          onSave={handleEditFlashcard} // Pass the save handler
           error={error}
           setError={setError}
         />

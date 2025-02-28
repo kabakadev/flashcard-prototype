@@ -2,6 +2,10 @@ const API_URL = "http://localhost:5000";
 
 export const fetchDeckAndFlashcards = async (deckId) => {
   const token = localStorage.getItem("authToken");
+  // Check if deckId is valid
+  if (!deckId) {
+    throw new Error("Deck ID is required");
+  }
 
   const deckResponse = await fetch(`${API_URL}/decks/${deckId}`, {
     headers: { Authorization: `Bearer ${token}` },
@@ -44,16 +48,21 @@ export const addFlashcard = async (deckId, newFlashcard) => {
 
 export const updateFlashcard = async (flashcard) => {
   const token = localStorage.getItem("authToken");
+  console.log(flashcard);
   const response = await fetch(`${API_URL}/flashcards/${flashcard.id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(flashcard),
+    body: JSON.stringify({
+      front_text: flashcard.front_text,
+      back_text: flashcard.back_text,
+    }),
   });
 
   if (!response.ok) throw new Error("Failed to update flashcard");
+  console.log(response);
   return response.json();
 };
 
@@ -99,6 +108,7 @@ export const fetchDecks = async () => {
 // Add this function if it's not already present
 export const deleteDeck = async (deckId) => {
   const token = localStorage.getItem("authToken");
+  console.log("this is the deck Id", deckId);
   const response = await fetch(`${API_URL}/decks/${deckId}`, {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` },

@@ -69,9 +69,7 @@ const MyDecks = () => {
     }
 
     try {
-      const token = localStorage.getItem("authToken");
       const updatedDeck = await createOrUpdateDeck(
-        token,
         {
           id: editingDeck?.id,
           title: deckTitle,
@@ -83,10 +81,10 @@ const MyDecks = () => {
         !!editingDeck
       );
 
-      setDecks(
+      setDecks((prevDecks) =>
         editingDeck
-          ? decks.map((d) => (d.id === updatedDeck.id ? updatedDeck : d))
-          : [...decks, updatedDeck]
+          ? prevDecks.map((d) => (d.id === updatedDeck.id ? updatedDeck : d))
+          : [...prevDecks, updatedDeck]
       );
       handleCloseModal();
     } catch (error) {
@@ -94,21 +92,18 @@ const MyDecks = () => {
       setError("An error occurred while saving the deck.");
     }
   };
-
   const handleDeleteDeck = async (event, deckId) => {
     event.stopPropagation();
     if (!window.confirm("Are you sure you want to delete this deck?")) return;
 
     try {
-      const token = localStorage.getItem("authToken");
-      await deleteDeck(token, deckId);
-      setDecks(decks.filter((deck) => deck.id !== deckId));
+      await deleteDeck(deckId); // Pass the correct deckId
+      setDecks((prevDecks) => prevDecks.filter((deck) => deck.id !== deckId)); // Update the local state
     } catch (error) {
       console.error("Error deleting deck:", error);
       setError("An error occurred while deleting the deck.");
     }
   };
-
   const handleCloseModal = () => {
     setModalOpen(false);
     setEditingDeck(null);

@@ -141,7 +141,7 @@ const DeckCard = ({ deck, theme, onEdit, onDelete, onStudy, navigate }) => (
             </IconButton>
             <IconButton
               size="small"
-              onClick={(e) => onDelete(e, deck.id)}
+              onClick={(e) => onDelete(e, deck.id)} // Pass the correct deck.id
               sx={{ color: "error.main", "&:hover": { color: "error.dark" } }}
             >
               <Trash2 size={18} />
@@ -150,7 +150,7 @@ const DeckCard = ({ deck, theme, onEdit, onDelete, onStudy, navigate }) => (
           <Button
             variant="contained"
             startIcon={<PlayCircle size={18} />}
-            onClick={(e) => onStudy(e, deck.id)}
+            onClick={(e) => onStudy(e, deck.id)} // Pass the correct deck.id
             sx={{
               bgcolor: "primary.main",
               color: "primary.contrastText",
