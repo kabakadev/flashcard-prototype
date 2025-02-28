@@ -8,7 +8,6 @@ import NavBar from "./NavBar";
 import LoadingState from "./Dashboard/LoadingState";
 import WelcomeSection from "./Dashboard/WelcomeSection";
 import ProgressCard from "./Dashboard/ProgressCard";
-
 import QuickStudyCard from "./Dashboard/QuickStudyCard";
 import LearningTipsCard from "./Dashboard/LeadingTipsCard";
 import { calculateStudyStreak, getDeckStats } from "../utils/dashBoardutil";
@@ -30,14 +29,13 @@ const Dashboard = () => {
     retention_rate: 0,
     average_study_time: 0,
   });
-  const [dataLoading, setDataLoading] = useState(true);
   const API_URL = "http://localhost:5000";
 
   useEffect(() => {
-    if (!dataLoading && !isAuthenticated) {
+    if (!loading && !isAuthenticated) {
       navigate("/login");
     }
-  }, [dataLoading, isAuthenticated, navigate]);
+  }, [loading, isAuthenticated, navigate]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,8 +49,6 @@ const Dashboard = () => {
         calculateStats(progressData);
       } catch (error) {
         console.error("Error fetching data:", error);
-      } finally {
-        setDataLoading(false);
       }
     };
 
@@ -134,7 +130,7 @@ const Dashboard = () => {
     return uniqueDays > 0 ? Math.round(totalStudyTime / uniqueDays) : 0;
   };
 
-  if (loading || dataLoading) {
+  if (loading) {
     return <LoadingState theme={theme} />;
   }
 
