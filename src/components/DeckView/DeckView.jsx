@@ -61,7 +61,11 @@ const DeckView = () => {
     loadDeckAndFlashcards();
   }, [deckId, user]);
 
-  const handleAddFlashcard = async () => {
+  const handleAddFlashcard = () => {
+    setAddModalOpen(true); // Open the add flashcard modal
+  };
+
+  const handleSaveFlashcard = async () => {
     try {
       const newCard = await addFlashcard(deckId, newFlashcard);
       setFlashcards([...flashcards, newCard]);
@@ -107,7 +111,7 @@ const DeckView = () => {
       <Container maxWidth="xl" sx={{ mt: 4 }}>
         <DeckHeader
           deck={deck}
-          onAddFlashcard={() => setAddModalOpen(true)}
+          onAddFlashcard={handleAddFlashcard} // Pass the handleAddFlashcard function
           navigate={navigate}
         />
 
@@ -120,12 +124,13 @@ const DeckView = () => {
         <FlashcardList
           flashcards={flashcards}
           onEdit={(flashcard) => {
-            setSelectedFlashcard(flashcard); // Set the selected flashcard
-            setModalOpen(true); // Open the modal
+            setSelectedFlashcard(flashcard);
+            setModalOpen(true);
           }}
           onDelete={handleDeleteFlashcard}
           navigate={navigate}
           deckId={deckId}
+          onAddFlashcard={handleAddFlashcard} // Pass the handleAddFlashcard function
         />
 
         <EditFlashcardModal
@@ -134,8 +139,8 @@ const DeckView = () => {
             setModalOpen(false);
             setError("");
           }}
-          flashcard={selectedFlashcard} // Pass the selected flashcard
-          onSave={handleEditFlashcard} // Pass the save handler
+          flashcard={selectedFlashcard}
+          onSave={handleEditFlashcard}
           error={error}
           setError={setError}
         />
@@ -148,7 +153,7 @@ const DeckView = () => {
           }}
           newFlashcard={newFlashcard}
           setNewFlashcard={setNewFlashcard}
-          onSave={handleAddFlashcard}
+          onSave={handleSaveFlashcard}
           error={error}
           setError={setError}
         />
