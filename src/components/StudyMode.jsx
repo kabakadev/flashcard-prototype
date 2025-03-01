@@ -64,10 +64,28 @@ const StudyMode = () => {
         if (!showAnswer) {
           setShowAnswer(true);
         }
-      } else if (showAnswer) {
-        if (e.key === "ArrowRight" || e.key === "1") {
+      } else if (e.key === "ArrowRight") {
+        // Next card
+        if (showAnswer) {
           handleFlashcardResponse(true);
-        } else if (e.key === "ArrowLeft" || e.key === "0") {
+        } else if (currentFlashcardIndex < flashcards.length - 1) {
+          setCurrentFlashcardIndex(currentFlashcardIndex + 1);
+          setShowAnswer(false);
+          startTimeRef.current = Date.now();
+        }
+      } else if (e.key === "ArrowLeft") {
+        // Previous card
+        if (showAnswer) {
+          handleFlashcardResponse(false);
+        } else if (currentFlashcardIndex > 0) {
+          setCurrentFlashcardIndex(currentFlashcardIndex - 1);
+          setShowAnswer(false);
+          startTimeRef.current = Date.now();
+        }
+      } else if (showAnswer) {
+        if (e.key === "1") {
+          handleFlashcardResponse(true);
+        } else if (e.key === "0") {
           handleFlashcardResponse(false);
         }
       }
@@ -75,7 +93,7 @@ const StudyMode = () => {
 
     window.addEventListener("keydown", handleKeyPress);
     return () => window.removeEventListener("keydown", handleKeyPress);
-  }, [showAnswer]);
+  }, [showAnswer, currentFlashcardIndex, flashcards.length]);
 
   // Fetch deck details, flashcards, and progress
   useEffect(() => {
@@ -199,6 +217,67 @@ const StudyMode = () => {
 
   const handleExitStudy = () => {
     navigate("/study");
+  };
+
+  const handleMarkAsLearned = async () => {
+    const currentFlashcard = flashcards[currentFlashcardIndex];
+
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(`${API_URL}/progress`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          deck_id: Number.parseInt(deckId),
+          flashcard_id: currentFlashcard.id,
+          was_correct: true,
+          time_spent: 0,
+          is_learned: true,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to update progress");
+
+      // Update local progress state
+      setProgress((prevProgress) => {
+        const updatedProgress = [...prevProgress];
+        const index = updatedProgress.findIndex(
+          (p) => p.flashcard_id === currentFlashcard.id
+        );
+
+        if (index !== -1) {
+          updatedProgress[index] = {
+            ...updatedProgress[index],
+            is_learned: true,
+            review_status: "mastered",
+          };
+        } else {
+          updatedProgress.push({
+            flashcard_id: currentFlashcard.id,
+            deck_id: Number.parseInt(deckId),
+            is_learned: true,
+            review_status: "mastered",
+            study_count: 1,
+            correct_attempts: 1,
+            incorrect_attempts: 0,
+          });
+        }
+
+        return updatedProgress;
+      });
+
+      // Update session stats
+      setSessionStats((prev) => ({
+        ...prev,
+        cardsLearned: prev.cardsLearned + 1,
+      }));
+    } catch (error) {
+      console.error("Error marking card as learned:", error);
+      setError("Failed to mark card as learned. Please try again.");
+    }
   };
 
   if (loading) {
@@ -482,6 +561,85 @@ const StudyMode = () => {
 
         {/* Action Buttons */}
         <Box sx={{ mt: 4, display: "flex", justifyContent: "center", gap: 2 }}>
+          {/* Navigation Buttons */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "100%",
+              mb: 2,
+            }}
+          >
+            <Tooltip title="Previous Card (Left Arrow)">
+              <span>
+                <IconButton
+                  onClick={() => {
+                    if (currentFlashcardIndex > 0) {
+                      setCurrentFlashcardIndex(currentFlashcardIndex - 1);
+                      setShowAnswer(false);
+                      startTimeRef.current = Date.now();
+                    }
+                  }}
+                  disabled={currentFlashcardIndex === 0}
+                  sx={{
+                    bgcolor: "background.paper",
+                    boxShadow: 1,
+                    "&:hover": { bgcolor: "action.hover" },
+                    "&.Mui-disabled": { opacity: 0.5 },
+                  }}
+                >
+                  <ArrowLeft size={24} />
+                </IconButton>
+              </span>
+            </Tooltip>
+
+            {/* Mark as Learned Button */}
+            <Tooltip
+              title={
+                cardProgress.is_learned ? "Already Learned" : "Mark as Learned"
+              }
+            >
+              <span>
+                <Button
+                  variant="outlined"
+                  color={cardProgress.is_learned ? "success" : "primary"}
+                  onClick={handleMarkAsLearned}
+                  startIcon={<Trophy size={20} />}
+                  disabled={cardProgress.is_learned}
+                  sx={{ px: 2 }}
+                >
+                  {cardProgress.is_learned ? "Learned" : "Mark as Learned"}
+                </Button>
+              </span>
+            </Tooltip>
+
+            <Tooltip title="Next Card (Right Arrow)">
+              <span>
+                <IconButton
+                  onClick={() => {
+                    if (currentFlashcardIndex < flashcards.length - 1) {
+                      setCurrentFlashcardIndex(currentFlashcardIndex + 1);
+                      setShowAnswer(false);
+                      startTimeRef.current = Date.now();
+                    }
+                  }}
+                  disabled={currentFlashcardIndex === flashcards.length - 1}
+                  sx={{
+                    bgcolor: "background.paper",
+                    boxShadow: 1,
+                    "&:hover": { bgcolor: "action.hover" },
+                    "&.Mui-disabled": { opacity: 0.5 },
+                  }}
+                >
+                  <ArrowLeft
+                    size={24}
+                    style={{ transform: "rotate(180deg)" }}
+                  />
+                </IconButton>
+              </span>
+            </Tooltip>
+          </Box>
+
           {!showAnswer ? (
             <Button
               variant="contained"
