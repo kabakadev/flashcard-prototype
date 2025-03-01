@@ -12,7 +12,7 @@ import MyDecks from "./components/MyDecks";
 import DeckView from "./components/DeckView/DeckView";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Study from "./components/Study/Study";
-import StudyMode from "./components/StudyMode";
+import StudyMode from "./components/StudyModeComponents/StudyMode";
 
 // Wrap the routes with MUI theme provider
 function AppContent() {
