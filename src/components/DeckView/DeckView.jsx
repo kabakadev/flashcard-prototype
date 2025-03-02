@@ -3,7 +3,13 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useUser } from "../context/UserContext";
-import { Box, Container, useTheme, Alert } from "@mui/material";
+import {
+  Box,
+  Container,
+  useTheme,
+  Alert,
+  CircularProgress,
+} from "@mui/material";
 import NavBar from "../NavBar";
 import LoadingState from "./LoadingState";
 import DeckHeader from "./DeckHeader";
@@ -102,7 +108,18 @@ const DeckView = () => {
   };
 
   if (userLoading || loading) {
-    return <LoadingState theme={theme} />;
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   return (

@@ -3,10 +3,17 @@
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "./context/UserContext";
-import { Box, Container, Grid, useTheme, Alert } from "@mui/material";
+import {
+  Box,
+  Container,
+  Grid,
+  useTheme,
+  Alert,
+  CircularProgress,
+} from "@mui/material";
 import { motion } from "framer-motion";
 import NavBar from "./NavBar";
-import LoadingState from "./Dashboard/LoadingState";
+
 import EmptyState from "./MyDecks/EmptyState";
 import DeckCard from "./MyDecks/DeckCard";
 import DeckModal from "./MyDecks/DeckModal";
@@ -177,7 +184,18 @@ const MyDecks = () => {
   );
 
   if (userLoading || loading) {
-    return <LoadingState theme={theme} />;
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   return (
