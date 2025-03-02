@@ -5,7 +5,7 @@ export const defaultDecks = [
     description: "Learn basic Spanish words and phrases.",
     subject: "Languages",
     category: "Spanish",
-    difficulty: "Beginner",
+    difficulty: 1,
     flashcards: [
       { front_text: "Hello", back_text: "Hola" },
       { front_text: "Goodbye", back_text: "Adiós" },
@@ -19,7 +19,7 @@ export const defaultDecks = [
     description: "Basic Python programming concepts.",
     subject: "Programming",
     category: "Python",
-    difficulty: "Beginner",
+    difficulty: 1,
     flashcards: [
       {
         front_text: "What is a variable?",
