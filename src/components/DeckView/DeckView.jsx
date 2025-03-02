@@ -11,7 +11,6 @@ import {
   CircularProgress,
 } from "@mui/material";
 import NavBar from "../NavBar";
-import LoadingState from "./LoadingState";
 import DeckHeader from "./DeckHeader";
 import FlashcardList from "./FlashCardList";
 import EditFlashcardModal from "./EditFlashcardModal";
