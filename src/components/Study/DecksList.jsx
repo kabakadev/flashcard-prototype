@@ -16,6 +16,12 @@ import { BookOpen, AlertCircle } from "lucide-react";
 const DecksList = ({ decks, onDeckClick, onCreateDeckClick }) => {
   const theme = useTheme();
 
+  // Log the decks prop to debug
+  console.log("decks:", decks);
+
+  // Ensure decks is always an array
+  const safeDecks = Array.isArray(decks) ? decks : [];
+
   // Calculate due for review based on spaced repetition algorithm
   const getDueStatus = (deck) => {
     // This is a placeholder - in a real app, you would calculate this based on
@@ -40,13 +46,13 @@ const DecksList = ({ decks, onDeckClick, onCreateDeckClick }) => {
     }
   };
 
-  if (decks.length === 0) {
+  if (safeDecks.length === 0) {
     return <EmptyDeckState onCreateDeckClick={onCreateDeckClick} />;
   }
 
   return (
     <Grid container spacing={3}>
-      {decks.map((deck) => {
+      {safeDecks.map((deck) => {
         const dueStatus = getDueStatus(deck);
         return (
           <Grid item xs={12} sm={6} md={4} key={deck.id}>
