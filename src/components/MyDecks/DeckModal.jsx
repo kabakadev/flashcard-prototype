@@ -33,6 +33,37 @@ const DeckModal = ({
 }) => {
   const [error, setError] = useState("");
 
+  const validateForm = () => {
+    if (!deckTitle.trim()) {
+      setError("Title is required");
+      return false;
+    }
+    if (!deckDescription.trim()) {
+      setError("Description is required");
+      return false;
+    }
+    if (!deckSubject.trim()) {
+      setError("Subject is required");
+      return false;
+    }
+    if (!deckCategory.trim()) {
+      setError("Category is required");
+      return false;
+    }
+    if (!deckDifficulty) {
+      setError("Difficulty Level is required");
+      return false;
+    }
+    return true;
+  };
+
+  const handleSave = () => {
+    if (validateForm()) {
+      setError("");
+      onSave();
+    }
+  };
+
   return (
     <Modal
       open={open}
@@ -88,6 +119,9 @@ const DeckModal = ({
             fullWidth
             multiline
             rows={3}
+            required
+            error={!deckDescription.trim()}
+            helperText={!deckDescription.trim() && "Description is required"}
           />
 
           <Grid container spacing={2}>
@@ -97,6 +131,9 @@ const DeckModal = ({
                 value={deckSubject}
                 onChange={(e) => setDeckSubject(e.target.value)}
                 fullWidth
+                required
+                error={!deckSubject.trim()}
+                helperText={!deckSubject.trim() && "Subject is required"}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -105,6 +142,9 @@ const DeckModal = ({
                 value={deckCategory}
                 onChange={(e) => setDeckCategory(e.target.value)}
                 fullWidth
+                required
+                error={!deckCategory.trim()}
+                helperText={!deckCategory.trim() && "Category is required"}
               />
             </Grid>
           </Grid>
@@ -115,6 +155,8 @@ const DeckModal = ({
               value={deckDifficulty}
               onChange={(e) => setDeckDifficulty(Number(e.target.value))}
               label="Difficulty Level"
+              required
+              error={!deckDifficulty}
             >
               {[1, 2, 3, 4, 5].map((level) => (
                 <MenuItem key={level} value={level}>
@@ -132,7 +174,7 @@ const DeckModal = ({
           <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
             <Button
               variant="contained"
-              onClick={onSave}
+              onClick={handleSave}
               sx={{
                 flex: 1,
                 bgcolor: "primary.main",
