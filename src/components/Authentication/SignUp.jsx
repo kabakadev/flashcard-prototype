@@ -114,6 +114,7 @@ const Signup = () => {
                           category: deck.category,
                           difficulty: deck.difficulty,
                           user_id: user.id, // Associate the deck with the user
+                          is_default: true, // Mark as default deck
                         },
                         false // isEditing = false for new decks
                       );

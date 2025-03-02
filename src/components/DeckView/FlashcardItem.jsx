@@ -12,7 +12,8 @@ import {
 import { motion } from "framer-motion";
 import { Pencil, Trash2, Repeat } from "lucide-react";
 
-const FlashcardItem = ({ flashcard, onEdit, onDelete }) => {
+// src/components/DeckView/FlashcardItem.jsx
+const FlashcardItem = ({ flashcard, onEdit, onDelete, is_default }) => {
   const [previewSide, setPreviewSide] = useState("front");
 
   const toggleCardSide = () => {
@@ -110,31 +111,37 @@ const FlashcardItem = ({ flashcard, onEdit, onDelete }) => {
             }}
           >
             <Box>
-              <Tooltip title="Edit flashcard">
-                <IconButton
-                  size="small"
-                  onClick={() => onEdit(flashcard)}
-                  sx={{
-                    mr: 1,
-                    color: "text.secondary",
-                    "&:hover": { color: "primary.main" },
-                  }}
-                >
-                  <Pencil size={18} />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Delete flashcard">
-                <IconButton
-                  size="small"
-                  onClick={() => onDelete(flashcard.id)}
-                  sx={{
-                    color: "error.main",
-                    "&:hover": { color: "error.dark" },
-                  }}
-                >
-                  <Trash2 size={18} />
-                </IconButton>
-              </Tooltip>
+              {!is_default && (
+                <Tooltip title="Edit flashcard">
+                  <IconButton
+                    size="small"
+                    onClick={() => onEdit(flashcard)}
+                    sx={{
+                      mr: 1,
+                      color: "text.secondary",
+                      "&:hover": { color: "primary.main" },
+                    }}
+                  >
+                    <Pencil size={18} />
+                  </IconButton>
+                </Tooltip>
+              )}
+              {/* Conditionally render the delete button */}
+              {console.log("this is is_default", is_default)}
+              {!is_default && (
+                <Tooltip title="Delete flashcard">
+                  <IconButton
+                    size="small"
+                    onClick={() => onDelete(flashcard.id)}
+                    sx={{
+                      color: "error.main",
+                      "&:hover": { color: "error.dark" },
+                    }}
+                  >
+                    <Trash2 size={18} />
+                  </IconButton>
+                </Tooltip>
+              )}
             </Box>
           </Box>
         </CardContent>

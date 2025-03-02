@@ -123,6 +123,7 @@ const DeckView = () => {
 
   return (
     <Box sx={{ bgcolor: "background.default", minHeight: "100vh", pb: 8 }}>
+      {console.log("this is the deck", deck)}
       <NavBar />
       <Container maxWidth="xl" sx={{ mt: 4 }}>
         <DeckHeader
@@ -147,6 +148,7 @@ const DeckView = () => {
           navigate={navigate}
           deckId={deckId}
           onAddFlashcard={handleAddFlashcard} // Pass the handleAddFlashcard function
+          is_default={deck?.is_default} // Pass the is_default flag
         />
 
         <EditFlashcardModal

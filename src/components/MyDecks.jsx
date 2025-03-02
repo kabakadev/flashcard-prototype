@@ -245,6 +245,7 @@ const MyDecks = () => {
                     onDelete={handleDeleteDeck}
                     onStudy={handleStudyDeck}
                     navigate={navigate}
+                    is_default={deck.is_default} // Pass the is_default flag
                   />
                 </Grid>
               ))}
