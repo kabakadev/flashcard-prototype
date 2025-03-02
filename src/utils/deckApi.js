@@ -20,6 +20,21 @@ export const fetchDeckAndFlashcards = async (deckId) => {
 
   if (!cardsResponse.ok) throw new Error("Failed to fetch flashcards");
   const cardsData = await cardsResponse.json();
+  // Log the cardsData to see what the API is returning
+  console.log("cardsData:", cardsData);
+
+  // Handle the case where the API returns a message instead of an array
+  if (cardsData.message === "No flashcards found.") {
+    console.log("No flashcards found for this deck.");
+    return { deckData, flashcardsData: [] }; // Return an empty array for flashcardsData
+  }
+
+  // Ensure cardsData is an array before calling filter
+  if (!Array.isArray(cardsData)) {
+    console.error("Expected an array of flashcards, but got:", cardsData);
+    return { deckData, flashcardsData: [] }; // Return an empty array for flashcardsData
+  }
+
   const flashcardsData = cardsData.filter(
     (card) => card.deck_id === Number.parseInt(deckId)
   );

@@ -49,7 +49,7 @@ const DeckView = () => {
           deckId
         );
         setDeck(deckData);
-        setFlashcards(flashcardsData);
+        setFlashcards(Array.isArray(flashcardsData) ? flashcardsData : []);
       } catch (error) {
         console.error("Error fetching data:", error);
         setError("Failed to load deck data. Please try again later.");
