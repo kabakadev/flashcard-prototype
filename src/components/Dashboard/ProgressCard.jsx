@@ -83,13 +83,13 @@ const ProgressCard = ({ stats, theme, isDarkMode }) => {
               <Typography variant="caption" sx={{ color: "text.secondary" }}>
                 {weeklyProgress}% Complete
               </Typography>
-              <Typography variant="caption" sx={{ color: "text.secondary" }}>
+              {/* <Typography variant="caption" sx={{ color: "text.secondary" }}>
                 <Calendar
                   size={14}
                   style={{ verticalAlign: "text-bottom", marginRight: 4 }}
                 />
                 {stats.study_streak} day streak
-              </Typography>
+              </Typography> */}
             </Box>
           </Box>
           <Grid container spacing={2}>
