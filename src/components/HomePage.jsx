@@ -29,8 +29,6 @@ export default function Homepage() {
 
         <Divider sx={{ my: 8 }} />
 
-        <Divider sx={{ my: 8 }} />
-
         {/* Progress Stats Section */}
         <ProgressStatsSection />
 

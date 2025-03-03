@@ -65,22 +65,6 @@ export default function HeroSection({ isDarkMode }) {
                 >
                   Start learning for free
                 </Button>
-                <Button
-                  variant="outlined"
-                  size="large"
-                  sx={{
-                    borderColor: "primary.main",
-                    color: "primary.main",
-                    px: 4,
-                    py: 1.5,
-                    "&:hover": {
-                      borderColor: "primary.dark",
-                      bgcolor: "rgba(67, 97, 238, 0.04)",
-                    },
-                  }}
-                >
-                  How it works
-                </Button>
               </Box>
             </motion.div>
           </Grid>
