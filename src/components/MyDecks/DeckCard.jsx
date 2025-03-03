@@ -10,15 +10,7 @@ import {
 import { Pencil, Trash2, PlayCircle, Eye } from "lucide-react"; // Import the Eye icon
 import { motion } from "framer-motion";
 
-const DeckCard = ({
-  deck,
-  theme,
-  onEdit,
-  onDelete,
-  onStudy,
-  navigate,
-  is_default,
-}) => (
+const DeckCard = ({ deck, theme, onEdit, onDelete, onStudy, navigate }) => (
   <motion.div whileHover={{ y: -5, transition: { duration: 0.2 } }}>
     <Card
       sx={{
@@ -132,29 +124,25 @@ const DeckCard = ({
           }}
         >
           <Box>
-            {!is_default && (
-              <IconButton
-                size="small"
-                onClick={(e) => onEdit(e, deck)}
-                sx={{
-                  mr: 1,
-                  color: "text.secondary",
-                  "&:hover": { color: "primary.main" },
-                }}
-              >
-                <Pencil size={18} />
-              </IconButton>
-            )}
-            {/* Conditionally render the delete button */}
-            {!is_default && (
-              <IconButton
-                size="small"
-                onClick={(e) => onDelete(e, deck.id)}
-                sx={{ color: "error.main", "&:hover": { color: "error.dark" } }}
-              >
-                <Trash2 size={18} />
-              </IconButton>
-            )}
+            <IconButton
+              size="small"
+              onClick={(e) => onEdit(e, deck)}
+              sx={{
+                mr: 1,
+                color: "text.secondary",
+                "&:hover": { color: "primary.main" },
+              }}
+            >
+              <Pencil size={18} />
+            </IconButton>
+
+            <IconButton
+              size="small"
+              onClick={(e) => onDelete(e, deck.id)}
+              sx={{ color: "error.main", "&:hover": { color: "error.dark" } }}
+            >
+              <Trash2 size={18} />
+            </IconButton>
           </Box>
           <Box sx={{ display: "flex", gap: 2 }}>
             <Button

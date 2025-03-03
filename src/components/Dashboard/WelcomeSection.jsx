@@ -14,7 +14,7 @@ const WelcomeSection = ({ username }) => (
         variant="h4"
         sx={{ fontWeight: "bold", color: "text.primary", mb: 1 }}
       >
-        Welcome back, {username || "Learner"}!
+        Welcome, {username || "Learner"}!
       </Typography>
       <Typography variant="body1" sx={{ color: "text.secondary" }}>
         Track your progress, review your decks, and continue your learning

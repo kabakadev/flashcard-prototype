@@ -11,7 +11,6 @@ import {
   Alert,
   CircularProgress,
 } from "@mui/material";
-import { motion } from "framer-motion";
 import NavBar from "./NavBar";
 
 import EmptyState from "./MyDecks/EmptyState";
@@ -69,6 +68,7 @@ const MyDecks = () => {
 
     loadDecks();
   }, [user]);
+
   const handleCreateOrUpdateDeck = async () => {
     if (!deckTitle.trim()) {
       setError("Deck title is required");
@@ -99,6 +99,7 @@ const MyDecks = () => {
       setError("An error occurred while saving the deck.");
     }
   };
+
   const handleDeleteDeck = async (event, deckId) => {
     event.stopPropagation();
     if (!window.confirm("Are you sure you want to delete this deck?")) return;
@@ -111,6 +112,7 @@ const MyDecks = () => {
       setError("An error occurred while deleting the deck.");
     }
   };
+
   const handleCloseModal = () => {
     setModalOpen(false);
     setEditingDeck(null);
@@ -219,19 +221,7 @@ const MyDecks = () => {
           setSortBy={setSortBy}
         />
 
-        <motion.div
-          variants={{
-            hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: {
-                staggerChildren: 0.1,
-              },
-            },
-          }}
-          initial="hidden"
-          animate="visible"
-        >
+        <div>
           {filteredAndSortedDecks.length === 0 ? (
             <EmptyState theme={theme} onCreateDeck={() => setModalOpen(true)} />
           ) : (
@@ -245,13 +235,12 @@ const MyDecks = () => {
                     onDelete={handleDeleteDeck}
                     onStudy={handleStudyDeck}
                     navigate={navigate}
-                    is_default={deck.is_default} // Pass the is_default flag
                   />
                 </Grid>
               ))}
             </Grid>
           )}
-        </motion.div>
+        </div>
 
         <DeckModal
           open={modalOpen}
