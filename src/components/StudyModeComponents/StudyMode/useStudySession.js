@@ -46,10 +46,14 @@ export const useStudySession = (
 
         if (!flashcardsResponse.ok)
           throw new Error("Failed to fetch flashcards");
+
         const flashcardsData = await flashcardsResponse.json();
-        const deckFlashcards = flashcardsData.filter(
-          (card) => card.deck_id === Number.parseInt(deckId)
-        );
+        // Ensure flashcardsData is an array before filtering
+        const deckFlashcards = Array.isArray(flashcardsData)
+          ? flashcardsData.filter(
+              (card) => card.deck_id === Number.parseInt(deckId)
+            )
+          : [];
         setFlashcards(deckFlashcards);
 
         // Fetch progress for this deck

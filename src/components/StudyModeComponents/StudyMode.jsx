@@ -129,7 +129,7 @@ const StudyMode = () => {
     );
   }
 
-  if (flashcards.length === 0) {
+  if (!loading && flashcards.length === 0) {
     return <EmptyDeckState deckId={deckId} />;
   }
 
