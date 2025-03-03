@@ -17,8 +17,6 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import ThemeToggle from "../ThemeComponents/ThemeToggle";
-import { defaultDecks } from "../../utils/defaultDecks"; // Import default decks
-import { createOrUpdateDeck, addFlashcard } from "../../utils/deckApi"; // Import API functions
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -95,40 +93,12 @@ const Signup = () => {
               validationSchema={validationSchema}
               onSubmit={async (values, { setSubmitting, setErrors }) => {
                 try {
-                  // Step 1: Create the user
-                  const user = await signup(
+                  const success = await signup(
                     values.email,
                     values.username,
                     values.password
                   );
-
-                  if (user) {
-                    // Step 2: Create default decks and flashcards for the user
-                    for (const deck of defaultDecks) {
-                      // Create the deck
-                      const newDeck = await createOrUpdateDeck(
-                        {
-                          title: deck.title,
-                          description: deck.description,
-                          subject: deck.subject,
-                          category: deck.category,
-                          difficulty: deck.difficulty,
-                          user_id: user.id, // Associate the deck with the user
-                          is_default: true, // Mark as default deck
-                        },
-                        false // isEditing = false for new decks
-                      );
-
-                      // Create flashcards for the deck
-                      for (const flashcard of deck.flashcards) {
-                        await addFlashcard(newDeck.id, {
-                          front_text: flashcard.front_text,
-                          back_text: flashcard.back_text,
-                        });
-                      }
-                    }
-
-                    // Redirect to dashboard
+                  if (success) {
                     navigate("/dashboard");
                   }
                 } catch (error) {
