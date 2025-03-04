@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Box,
   FormControl,
@@ -6,6 +8,7 @@ import {
   MenuItem,
   TextField,
 } from "@mui/material";
+import { memo, useMemo } from "react";
 
 const FilterSort = ({
   subjects,
@@ -15,7 +18,40 @@ const FilterSort = ({
   sortBy,
   setSortBy,
 }) => {
-  const difficultyLevels = [1, 2, 3, 4, 5];
+  // Memoize the difficulty levels array to prevent recreation on each render
+  const difficultyLevels = useMemo(() => [1, 2, 3, 4, 5], []);
+
+  // Memoize the subject menu items
+  const subjectMenuItems = useMemo(() => {
+    return subjects.map((subject) => (
+      <MenuItem key={subject} value={subject}>
+        {subject}
+      </MenuItem>
+    ));
+  }, [subjects]);
+
+  // Memoize the category menu items
+  const categoryMenuItems = useMemo(() => {
+    return categories.map((category) => (
+      <MenuItem key={category} value={category}>
+        {category}
+      </MenuItem>
+    ));
+  }, [categories]);
+
+  // Memoize the difficulty menu items
+  const difficultyMenuItems = useMemo(() => {
+    return difficultyLevels.map((level) => (
+      <MenuItem key={level} value={level}>
+        {level}
+      </MenuItem>
+    ));
+  }, [difficultyLevels]);
+
+  // Handle filter changes with a single function
+  const handleFilterChange = (field, value) => {
+    setFilter((prev) => ({ ...prev, [field]: value }));
+  };
 
   return (
     <Box sx={{ display: "flex", gap: 2, mb: 3, flexWrap: "wrap" }}>
@@ -23,15 +59,11 @@ const FilterSort = ({
         <InputLabel>Subject</InputLabel>
         <Select
           value={filter.subject}
-          onChange={(e) => setFilter({ ...filter, subject: e.target.value })}
+          onChange={(e) => handleFilterChange("subject", e.target.value)}
           label="Subject"
         >
           <MenuItem value="">All</MenuItem>
-          {subjects.map((subject) => (
-            <MenuItem key={subject} value={subject}>
-              {subject}
-            </MenuItem>
-          ))}
+          {subjectMenuItems}
         </Select>
       </FormControl>
 
@@ -39,15 +71,11 @@ const FilterSort = ({
         <InputLabel>Category</InputLabel>
         <Select
           value={filter.category}
-          onChange={(e) => setFilter({ ...filter, category: e.target.value })}
+          onChange={(e) => handleFilterChange("category", e.target.value)}
           label="Category"
         >
           <MenuItem value="">All</MenuItem>
-          {categories.map((category) => (
-            <MenuItem key={category} value={category}>
-              {category}
-            </MenuItem>
-          ))}
+          {categoryMenuItems}
         </Select>
       </FormControl>
 
@@ -55,15 +83,11 @@ const FilterSort = ({
         <InputLabel>Difficulty</InputLabel>
         <Select
           value={filter.difficulty}
-          onChange={(e) => setFilter({ ...filter, difficulty: e.target.value })}
+          onChange={(e) => handleFilterChange("difficulty", e.target.value)}
           label="Difficulty"
         >
           <MenuItem value="">All</MenuItem>
-          {difficultyLevels.map((level) => (
-            <MenuItem key={level} value={level}>
-              {level}
-            </MenuItem>
-          ))}
+          {difficultyMenuItems}
         </Select>
       </FormControl>
 
@@ -84,10 +108,11 @@ const FilterSort = ({
         label="Search"
         variant="outlined"
         value={filter.search}
-        onChange={(e) => setFilter({ ...filter, search: e.target.value })}
+        onChange={(e) => handleFilterChange("search", e.target.value)}
       />
     </Box>
   );
 };
 
-export default FilterSort;
+// Export as memoized component
+export default memo(FilterSort);

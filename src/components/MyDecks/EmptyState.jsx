@@ -1,5 +1,6 @@
 import { Card, Typography, Button } from "@mui/material";
 import { GraduationCap, Plus } from "lucide-react";
+import { memo } from "react";
 
 const EmptyState = ({ theme, onCreateDeck }) => (
   <Card
@@ -43,4 +44,5 @@ const EmptyState = ({ theme, onCreateDeck }) => (
   </Card>
 );
 
-export default EmptyState;
+// Export as memoized component
+export default memo(EmptyState);

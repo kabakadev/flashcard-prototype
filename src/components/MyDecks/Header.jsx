@@ -3,12 +3,13 @@
 import { Box, Typography, Button } from "@mui/material";
 import { BookOpen, Plus } from "lucide-react";
 import { motion } from "framer-motion";
+import { memo } from "react";
 
 const Header = ({ onCreateDeck }) => (
   <motion.div
-    initial={{ opacity: 0, y: -20 }}
+    initial={{ opacity: 0, y: -10 }} // Reduced animation distance
     animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5 }}
+    transition={{ duration: 0.3 }} // Reduced animation duration
   >
     <Box sx={{ mb: 4 }}>
       <Box
@@ -55,4 +56,5 @@ const Header = ({ onCreateDeck }) => (
   </motion.div>
 );
 
-export default Header;
+// Export as memoized component
+export default memo(Header);

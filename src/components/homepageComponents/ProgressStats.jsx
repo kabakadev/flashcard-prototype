@@ -9,6 +9,7 @@ import {
   useTheme,
   Grid,
   Box,
+  useMediaQuery,
 } from "@mui/material";
 import { CircularProgress } from "./CircularProgress";
 
@@ -41,6 +42,7 @@ const stats = [
 
 export default function ProgressStats() {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isDarkMode = theme.palette.mode === "dark";
 
   // Custom icon background colors based on theme
@@ -51,8 +53,8 @@ export default function ProgressStats() {
   const iconColor = theme.palette.primary.main;
 
   return (
-    <Box sx={{ maxWidth: "1200px", mx: "auto", px: 2 }}>
-      <Grid container spacing={4}>
+    <Box sx={{ maxWidth: "1200px", mx: "auto", px: isMobile ? 1 : 2 }}>
+      <Grid container spacing={isMobile ? 2 : 4}>
         {/* Circular Progress Card */}
         <Grid item xs={12} md={6}>
           <motion.div
@@ -73,8 +75,8 @@ export default function ProgressStats() {
                 },
               }}
             >
-              <CardContent sx={{ p: 4 }}>
-                <Grid container spacing={4}>
+              <CardContent sx={{ p: isMobile ? 2 : 4 }}>
+                <Grid container spacing={isMobile ? 2 : 4}>
                   {[
                     { value: 85, label: "Weekly Goal" },
                     { value: 92, label: "Mastery Level" },
@@ -85,6 +87,7 @@ export default function ProgressStats() {
                       <CircularProgress
                         percentage={item.value}
                         label={item.label}
+                        size={isMobile ? 80 : 120} // Adjust size for mobile
                       />
                     </Grid>
                   ))}
@@ -96,7 +99,7 @@ export default function ProgressStats() {
 
         {/* Stats Cards */}
         <Grid item xs={12} md={6}>
-          <Grid container spacing={3}>
+          <Grid container spacing={isMobile ? 2 : 3}>
             {stats.map((stat, index) => (
               <Grid item xs={6} key={index}>
                 <motion.div
@@ -117,7 +120,7 @@ export default function ProgressStats() {
                       },
                     }}
                   >
-                    <CardContent sx={{ p: 3 }}>
+                    <CardContent sx={{ p: isMobile ? 2 : 3 }}>
                       <Box
                         sx={{
                           backgroundColor: iconBgColor,
@@ -148,11 +151,12 @@ export default function ProgressStats() {
                         viewport={{ once: true }}
                       >
                         <Typography
-                          variant="h4"
+                          variant={isMobile ? "h5" : "h4"} // Smaller heading on mobile
                           sx={{
                             color: "text.primary",
                             mb: 1,
                             fontWeight: "bold",
+                            fontSize: isMobile ? "1.5rem" : "2rem", // Responsive font size
                           }}
                         >
                           {stat.value}
@@ -162,18 +166,22 @@ export default function ProgressStats() {
                             : ""}
                         </Typography>
                         <Typography
-                          variant="subtitle1"
+                          variant={isMobile ? "subtitle2" : "subtitle1"} // Smaller text on mobile
                           sx={{
                             color: "text.primary",
                             mb: 0.5,
                             fontWeight: "medium",
+                            fontSize: isMobile ? "0.875rem" : "1rem", // Responsive font size
                           }}
                         >
                           {stat.label}
                         </Typography>
                         <Typography
                           variant="body2"
-                          sx={{ color: "text.secondary" }}
+                          sx={{
+                            color: "text.secondary",
+                            fontSize: isMobile ? "0.75rem" : "0.875rem", // Responsive font size
+                          }}
                         >
                           {stat.description}
                         </Typography>
