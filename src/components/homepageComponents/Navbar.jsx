@@ -38,10 +38,11 @@ export default function Navbar() {
       }}
     >
       <Toolbar>
+        {/* Flashlearn Logo */}
         <Typography
           variant="h5"
           component="h1"
-          sx={{ flexGrow: 1, fontWeight: "bold", color: "text.primary" }}
+          sx={{ fontWeight: "bold", color: "text.primary" }}
         >
           Flashlearn
         </Typography>
@@ -49,6 +50,18 @@ export default function Navbar() {
         {/* Mobile View */}
         {isMobile ? (
           <>
+            {/* Centered ThemeToggle */}
+            <Box
+              sx={{
+                flexGrow: 1, // Takes up remaining space
+                display: "flex",
+                justifyContent: "center", // Centers the ThemeToggle
+              }}
+            >
+              <ThemeToggle />
+            </Box>
+
+            {/* Menu Icon */}
             <IconButton
               color="inherit"
               aria-label="menu"
@@ -56,21 +69,20 @@ export default function Navbar() {
             >
               <MenuIcon />
             </IconButton>
+
+            {/* Mobile Menu */}
             <Menu
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
               onClose={handleMenuClose}
             >
-              {/* Add ThemeToggle to the mobile menu */}
               <MenuItem
                 sx={{
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
                 }}
-              >
-                <ThemeToggle />
-              </MenuItem>
+              ></MenuItem>
               <MenuItem
                 onClick={handleMenuClose}
                 component={RouterLink}
@@ -89,7 +101,9 @@ export default function Navbar() {
           </>
         ) : (
           // Desktop View
-          <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+          <Box
+            sx={{ display: "flex", gap: 2, alignItems: "center", ml: "auto" }}
+          >
             <ThemeToggle />
             <Button
               variant="outlined"
