@@ -49,11 +49,14 @@ const Study = () => {
 
   const fetchDecks = async () => {
     try {
-      const response = await fetch("http://localhost:5000/decks", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        },
-      });
+      const response = await fetch(
+        "https://flashlearn-backend-2.onrender.com/decks",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
