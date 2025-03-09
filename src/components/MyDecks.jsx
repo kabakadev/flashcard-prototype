@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "./context/UserContext";
 import {
@@ -69,7 +69,7 @@ const MyDecks = () => {
     loadDecks();
   }, [user]);
 
-  const handleCreateOrUpdateDeck = async () => {
+  const handleCreateOrUpdateDeck = useCallback(async () => {
     if (!deckTitle.trim()) {
       setError("Deck title is required");
       return;
@@ -98,20 +98,27 @@ const MyDecks = () => {
       console.error("Error saving deck:", error);
       setError("An error occurred while saving the deck.");
     }
-  };
+  }, [
+    deckTitle,
+    deckDescription,
+    deckSubject,
+    deckCategory,
+    deckDifficulty,
+    editingDeck,
+  ]);
 
-  const handleDeleteDeck = async (event, deckId) => {
+  const handleDeleteDeck = useCallback(async (event, deckId) => {
     event.stopPropagation();
     if (!window.confirm("Are you sure you want to delete this deck?")) return;
 
     try {
-      await deleteDeck(deckId); // Pass the correct deckId
-      setDecks((prevDecks) => prevDecks.filter((deck) => deck.id !== deckId)); // Update the local state
+      await deleteDeck(deckId);
+      setDecks((prevDecks) => prevDecks.filter((deck) => deck.id !== deckId));
     } catch (error) {
       console.error("Error deleting deck:", error);
       setError("An error occurred while deleting the deck.");
     }
-  };
+  }, []);
 
   const handleCloseModal = () => {
     setModalOpen(false);
@@ -124,7 +131,7 @@ const MyDecks = () => {
     setError("");
   };
 
-  const handleEditDeck = (event, deck) => {
+  const handleEditDeck = useCallback((event, deck) => {
     event.stopPropagation();
     setEditingDeck(deck);
     setDeckTitle(deck.title);
@@ -133,47 +140,57 @@ const MyDecks = () => {
     setDeckCategory(deck.category);
     setDeckDifficulty(deck.difficulty);
     setModalOpen(true);
-  };
+  }, []);
 
-  const handleStudyDeck = (event, deckId) => {
-    event.stopPropagation();
-    navigate(`/study/${deckId}`);
-  };
+  const handleStudyDeck = useCallback(
+    (event, deckId) => {
+      event.stopPropagation();
+      navigate(`/study/${deckId}`);
+    },
+    [navigate]
+  );
 
   // Memoized filtered and sorted decks
   const filteredAndSortedDecks = useMemo(() => {
-    if (!Array.isArray(decks)) return []; // Return an empty array if decks is not an array
+    if (!Array.isArray(decks)) return [];
 
-    return decks
-      .filter((deck) => {
-        const matchesSubject =
-          !filter.subject || deck.subject === filter.subject;
-        const matchesCategory =
-          !filter.category || deck.category === filter.category;
-        const matchesDifficulty =
-          !filter.difficulty ||
-          deck.difficulty === Number.parseInt(filter.difficulty);
-        const matchesSearch =
-          !filter.search ||
-          deck.title.toLowerCase().includes(filter.search.toLowerCase());
-        return (
-          matchesSubject &&
-          matchesCategory &&
-          matchesDifficulty &&
-          matchesSearch
-        );
-      })
-      .sort((a, b) => {
-        if (sortBy === "title") {
-          return a.title.localeCompare(b.title);
-        } else if (sortBy === "lastStudied") {
-          return new Date(b.last_studied) - new Date(a.last_studied);
-        } else if (sortBy === "difficulty") {
-          return a.difficulty - b.difficulty;
-        }
-        return 0;
+    // Create a filtered array first to avoid multiple iterations
+    const filtered = decks.filter((deck) => {
+      // Short-circuit evaluation for better performance
+      if (filter.subject && deck.subject !== filter.subject) return false;
+      if (filter.category && deck.category !== filter.category) return false;
+      if (filter.difficulty && deck.difficulty !== Number(filter.difficulty))
+        return false;
+      if (
+        filter.search &&
+        !deck.title.toLowerCase().includes(filter.search.toLowerCase())
+      )
+        return false;
+      return true;
+    });
+
+    // Only sort after filtering to reduce the number of comparisons
+    if (sortBy === "title") {
+      return filtered.sort((a, b) => a.title.localeCompare(b.title));
+    } else if (sortBy === "lastStudied") {
+      return filtered.sort((a, b) => {
+        // Handle null or undefined dates
+        if (!a.last_studied) return 1;
+        if (!b.last_studied) return -1;
+        return new Date(b.last_studied) - new Date(a.last_studied);
       });
-  }, [decks, filter, sortBy]);
+    } else if (sortBy === "difficulty") {
+      return filtered.sort((a, b) => a.difficulty - b.difficulty);
+    }
+    return filtered;
+  }, [
+    decks,
+    filter.subject,
+    filter.category,
+    filter.difficulty,
+    filter.search,
+    sortBy,
+  ]);
 
   // Extract unique subjects and categories for filter options
   const subjects = useMemo(

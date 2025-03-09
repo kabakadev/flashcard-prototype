@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5000";
+const API_URL = "https://flashlearn-backend-2.onrender.com";
 
 export const fetchDeckAndFlashcards = async (deckId) => {
   const token = localStorage.getItem("authToken");

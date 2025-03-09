@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Box,
   Card,
@@ -7,11 +9,16 @@ import {
   IconButton,
   Button,
 } from "@mui/material";
-import { Pencil, Trash2, PlayCircle, Eye } from "lucide-react"; // Import the Eye icon
+import { Pencil, Trash2, PlayCircle, Eye } from "lucide-react";
 import { motion } from "framer-motion";
+import { memo } from "react";
 
 const DeckCard = ({ deck, theme, onEdit, onDelete, onStudy, navigate }) => (
-  <motion.div whileHover={{ y: -5, transition: { duration: 0.2 } }}>
+  <motion.div
+    whileHover={{ y: -5 }}
+    transition={{ duration: 0.2 }}
+    layout="position"
+  >
     <Card
       sx={{
         borderRadius: 3,
@@ -147,8 +154,8 @@ const DeckCard = ({ deck, theme, onEdit, onDelete, onStudy, navigate }) => (
           <Box sx={{ display: "flex", gap: 2 }}>
             <Button
               variant="outlined"
-              startIcon={<Eye size={18} />} // Add the Eye icon
-              onClick={() => navigate(`/mydecks/${deck.id}`)} // Navigate to deck details
+              startIcon={<Eye size={18} />}
+              onClick={() => navigate(`/mydecks/${deck.id}`)}
               sx={{
                 borderColor: "primary.main",
                 color: "primary.main",
@@ -183,4 +190,4 @@ const DeckCard = ({ deck, theme, onEdit, onDelete, onStudy, navigate }) => (
   </motion.div>
 );
 
-export default DeckCard;
+export default memo(DeckCard);

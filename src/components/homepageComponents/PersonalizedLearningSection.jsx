@@ -9,12 +9,18 @@ import {
   Button,
   Card,
   CardContent,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 
 export default function PersonalizedLearningSection() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
-    <Box sx={{ mb: 10 }}>
-      <Grid container spacing={6} alignItems="center">
+    <Box sx={{ mb: isMobile ? 6 : 10 }}>
+      <Grid container spacing={isMobile ? 4 : 6} alignItems="center">
+        {/* Text Section */}
         <Grid item xs={12} md={6}>
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -22,22 +28,23 @@ export default function PersonalizedLearningSection() {
             transition={{ duration: 0.5 }}
           >
             <Typography
-              variant="h3"
+              variant={isMobile ? "h4" : "h3"} // Smaller heading on mobile
               component="h2"
               sx={{
                 mb: 2,
                 fontWeight: "bold",
                 color: "text.primary",
+                fontSize: isMobile ? "1.75rem" : "2.25rem", // Responsive font size
               }}
             >
               Your Journey, Your Way
             </Typography>
             <Typography
-              variant="body1"
+              variant={isMobile ? "body2" : "body1"} // Smaller text on mobile
               sx={{
                 mb: 4,
                 color: "text.secondary",
-                fontSize: "1.1rem",
+                fontSize: isMobile ? "0.875rem" : "1.1rem", // Responsive font size
                 lineHeight: 1.6,
               }}
             >
@@ -58,7 +65,7 @@ export default function PersonalizedLearningSection() {
                   sx={{
                     mb: 2,
                     color: "text.primary",
-                    fontSize: "1rem",
+                    fontSize: isMobile ? "0.875rem" : "1rem", // Responsive font size
                   }}
                 >
                   {item}
@@ -68,14 +75,14 @@ export default function PersonalizedLearningSection() {
 
             <Button
               variant="contained"
-              size="large"
+              size={isMobile ? "medium" : "large"} // Smaller button on mobile
               component={RouterLink}
               to="/signup"
               sx={{
                 bgcolor: "primary.main",
                 color: "primary.contrastText",
-                px: 4,
-                py: 1.5,
+                px: isMobile ? 3 : 4, // Adjust padding on mobile
+                py: isMobile ? 1 : 1.5, // Adjust padding on mobile
                 "&:hover": {
                   bgcolor: "primary.dark",
                 },
@@ -85,6 +92,8 @@ export default function PersonalizedLearningSection() {
             </Button>
           </motion.div>
         </Grid>
+
+        {/* Image Section */}
         <Grid item xs={12} md={6}>
           <Card
             sx={{
@@ -101,7 +110,7 @@ export default function PersonalizedLearningSection() {
                 alt="Hand writing on blank notes"
                 sx={{
                   width: "100%",
-                  height: "400px",
+                  height: isMobile ? "300px" : "400px", // Reduce height on mobile
                   objectFit: "cover",
                 }}
               />

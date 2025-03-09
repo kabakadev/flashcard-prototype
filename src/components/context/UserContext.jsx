@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 
 const UserContext = createContext();
-const API_URL = "http://localhost:5000";
+const API_URL = "https://flashlearn-backend-2.onrender.com";
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
