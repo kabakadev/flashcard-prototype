@@ -2,10 +2,18 @@
 
 import { motion } from "framer-motion";
 import PropTypes from "prop-types";
-import { Card, CardContent, Typography, useTheme, Box } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Typography,
+  useTheme,
+  Box,
+  useMediaQuery,
+} from "@mui/material";
 
 export default function FeatureCard({ Icon, title, description }) {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isDarkMode = theme.palette.mode === "dark";
 
   // Custom icon background colors based on theme
@@ -34,11 +42,11 @@ export default function FeatureCard({ Icon, title, description }) {
       >
         <CardContent
           sx={{
-            p: 4,
+            p: isMobile ? 3 : 4, // Reduce padding on mobile
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            gap: 2,
+            gap: isMobile ? 1.5 : 2, // Reduce gap on mobile
           }}
         >
           <Box
@@ -51,7 +59,7 @@ export default function FeatureCard({ Icon, title, description }) {
               justifyContent: "center",
               width: "48px",
               height: "48px",
-              mb: 2,
+              mb: isMobile ? 1.5 : 2, // Reduce margin on mobile
               boxShadow: isDarkMode
                 ? "none"
                 : "0 4px 8px rgba(124, 58, 237, 0.1)",
@@ -65,22 +73,24 @@ export default function FeatureCard({ Icon, title, description }) {
             />
           </Box>
           <Typography
-            variant="h6"
+            variant={isMobile ? "subtitle1" : "h6"} // Smaller heading on mobile
             sx={{
               color: "text.primary",
               fontWeight: 600,
               textAlign: "center",
-              mb: 1,
+              mb: isMobile ? 0.5 : 1, // Reduce margin on mobile
+              fontSize: isMobile ? "1.1rem" : "1.25rem", // Responsive font size
             }}
           >
             {title}
           </Typography>
           <Typography
-            variant="body2"
+            variant={isMobile ? "body2" : "body1"} // Smaller text on mobile
             sx={{
               color: "text.secondary",
               textAlign: "center",
               lineHeight: 1.6,
+              fontSize: isMobile ? "0.875rem" : "1rem", // Responsive font size
             }}
           >
             {description}

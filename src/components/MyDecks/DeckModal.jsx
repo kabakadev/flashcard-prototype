@@ -13,7 +13,7 @@ import {
   Alert,
   Modal,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useCallback, memo } from "react";
 
 const DeckModal = ({
   open,
@@ -33,7 +33,8 @@ const DeckModal = ({
 }) => {
   const [error, setError] = useState("");
 
-  const validateForm = () => {
+  // Memoize validation function to prevent recreation on each render
+  const validateForm = useCallback(() => {
     if (!deckTitle.trim()) {
       setError("Title is required");
       return false;
@@ -55,14 +56,18 @@ const DeckModal = ({
       return false;
     }
     return true;
-  };
+  }, [deckTitle, deckDescription, deckSubject, deckCategory, deckDifficulty]);
 
-  const handleSave = () => {
+  // Memoize save handler
+  const handleSave = useCallback(() => {
     if (validateForm()) {
       setError("");
       onSave();
     }
-  };
+  }, [validateForm, onSave]);
+
+  // Memoize error clear handler
+  const clearError = useCallback(() => setError(""), []);
 
   return (
     <Modal
@@ -70,6 +75,8 @@ const DeckModal = ({
       onClose={onClose}
       aria-labelledby="deck-modal-title"
       aria-describedby="deck-modal-description"
+      // Add disablePortal to improve performance
+      disablePortal
     >
       <Box
         sx={{
@@ -93,7 +100,7 @@ const DeckModal = ({
         </Typography>
 
         {error && (
-          <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError("")}>
+          <Alert severity="error" sx={{ mb: 3 }} onClose={clearError}>
             {error}
           </Alert>
         )}
@@ -208,4 +215,4 @@ const DeckModal = ({
   );
 };
 
-export default DeckModal;
+export default memo(DeckModal);

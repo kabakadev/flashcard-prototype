@@ -69,11 +69,14 @@ const Study = () => {
 
   const fetchUserStats = async () => {
     try {
-      const response = await fetch("http://localhost:5000/dashboard", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        },
-      });
+      const response = await fetch(
+        "https://flashlearn-backend-2.onrender.com/dashboard",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
@@ -95,16 +98,19 @@ const Study = () => {
 
   const updateWeeklyGoal = async () => {
     try {
-      const response = await fetch("http://localhost:5000/user/stats", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        },
-        body: JSON.stringify({
-          weekly_goal: newWeeklyGoal,
-        }),
-      });
+      const response = await fetch(
+        "https://flashlearn-backend-2.onrender.com/user/stats",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+          body: JSON.stringify({
+            weekly_goal: newWeeklyGoal,
+          }),
+        }
+      );
 
       if (response.ok) {
         setUserStats({

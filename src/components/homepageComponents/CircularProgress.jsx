@@ -7,11 +7,16 @@ import {
   CircularProgress as MUICircularProgress,
   Typography,
   useTheme,
+  useMediaQuery,
 } from "@mui/material";
 
 export function CircularProgress({ percentage, label, size = 120 }) {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isDarkMode = theme.palette.mode === "dark";
+
+  // Adjust size for mobile screens
+  const adjustedSize = isMobile ? 80 : size;
 
   return (
     <Box
@@ -27,15 +32,15 @@ export function CircularProgress({ percentage, label, size = 120 }) {
         sx={{
           position: "relative",
           display: "inline-flex",
-          width: size,
-          height: size,
+          width: adjustedSize,
+          height: adjustedSize,
         }}
       >
         {/* Background circle */}
         <MUICircularProgress
           variant="determinate"
           value={100}
-          size={size}
+          size={adjustedSize}
           thickness={3.2}
           sx={{
             color: (theme) =>
@@ -48,7 +53,7 @@ export function CircularProgress({ percentage, label, size = 120 }) {
         <MUICircularProgress
           variant="determinate"
           value={percentage}
-          size={size}
+          size={adjustedSize}
           thickness={3.2}
           sx={{
             position: "absolute",
@@ -78,11 +83,12 @@ export function CircularProgress({ percentage, label, size = 120 }) {
             transition={{ delay: 0.5 }}
           >
             <Typography
-              variant="h4"
+              variant={isMobile ? "h5" : "h4"} // Smaller text on mobile
               component="div"
               sx={{
                 color: "text.primary",
                 fontWeight: "bold",
+                fontSize: isMobile ? "1.5rem" : "2rem", // Responsive font size
               }}
             >
               {percentage}%
@@ -95,13 +101,18 @@ export function CircularProgress({ percentage, label, size = 120 }) {
         initial={{ opacity: 0, y: 5 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7 }}
-        style={{ width: "100%", textAlign: "center", marginTop: "16px" }}
+        style={{
+          width: "100%",
+          textAlign: "center",
+          marginTop: isMobile ? "8px" : "16px",
+        }} // Reduce margin on mobile
       >
         <Typography
-          variant="body1"
+          variant={isMobile ? "body2" : "body1"} // Smaller text on mobile
           sx={{
             color: "text.secondary",
             fontWeight: "medium",
+            fontSize: isMobile ? "0.875rem" : "1rem", // Responsive font size
           }}
         >
           {label}

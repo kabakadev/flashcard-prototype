@@ -1,4 +1,4 @@
-import { Box, Typography, Grid } from "@mui/material";
+import { Box, Typography, Grid, useTheme, useMediaQuery } from "@mui/material";
 import {
   GraduationCap,
   Target,
@@ -49,36 +49,41 @@ const features = [
 ];
 
 export default function FeaturesSection() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
-    <Box sx={{ mb: 10 }}>
+    <Box sx={{ mb: isMobile ? 6 : 10 }}>
       <Typography
-        variant="h3"
+        variant={isMobile ? "h4" : "h3"} // Smaller heading on mobile
         component="h2"
         align="center"
         sx={{
           mb: 2,
           fontWeight: "bold",
           color: "text.primary",
+          fontSize: isMobile ? "1.75rem" : "2.25rem", // Responsive font size
         }}
       >
         Features Designed for Effective Learning
       </Typography>
       <Typography
-        variant="h6"
+        variant={isMobile ? "body1" : "h6"} // Smaller subheading on mobile
         align="center"
         sx={{
-          mb: 6,
+          mb: isMobile ? 4 : 6,
           color: "text.secondary",
           maxWidth: "800px",
           mx: "auto",
           fontWeight: "normal",
+          fontSize: isMobile ? "1rem" : "1.25rem", // Responsive font size
         }}
       >
         Our platform combines proven learning techniques with modern technology
         to help you learn faster and remember longer.
       </Typography>
 
-      <Grid container spacing={4}>
+      <Grid container spacing={isMobile ? 2 : 4}>
         {features.map((feature, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>
             <FeatureCard {...feature} />
