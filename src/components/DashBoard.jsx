@@ -27,7 +27,7 @@ const Dashboard = () => {
   const [decks, setDecks] = useState([]);
   const [progress, setProgress] = useState([]);
   const [stats, setStats] = useState({});
-  const API_URL = "http://localhost:5000";
+  const API_URL = "https://flashlearn-backend-2.onrender.com";
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
